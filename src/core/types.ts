@@ -9,12 +9,16 @@ export interface ProfilePersonal {
   email: string;
   phone: string;
   location: string;
+  city?: string;
+  state?: string;
+  country?: string;
 }
 
 export interface ProfileLinks {
   linkedin?: string;
   github?: string;
   portfolio?: string;
+  leetcode?: string;
 }
 
 export interface ProfileExperience {
@@ -27,16 +31,19 @@ export interface ProfileEducation {
   degree: string;
   institution: string;
   graduationYear: number;
+  gpa?: string;
+  fieldOfStudy?: string;
 }
 
 export interface Profile {
   id: string;
-  name: string; // e.g. "Backend", "ML"
+  name: string; // e.g. "AI Engineer", "ML", "SDE", "Product Management"
   personal: ProfilePersonal;
   links: ProfileLinks;
   experience: ProfileExperience;
   education: ProfileEducation;
   resumeFileName: string; // Used for prompt, not actual file
+  avatarUrl?: string;
   customAnswers?: Record<string, string>; // Free-form Q&A overrides keyed by normalized question text
 }
 

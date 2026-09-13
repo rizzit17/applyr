@@ -21,12 +21,20 @@ export function resolveProfileValue(profile: Profile, canonicalField: string): s
       return profile.personal.phone;
     case 'personal.location':
       return profile.personal.location;
+    case 'personal.city':
+      return profile.personal.city || profile.personal.location.split(',')[0].trim();
+    case 'personal.state':
+      return profile.personal.state || '';
+    case 'personal.country':
+      return profile.personal.country || 'India';
     case 'links.linkedin':
       return profile.links.linkedin || '';
     case 'links.github':
       return profile.links.github || '';
     case 'links.portfolio':
       return profile.links.portfolio || '';
+    case 'links.leetcode':
+      return profile.links.leetcode || '';
     case 'experience.currentTitle':
       return profile.experience.currentTitle;
     case 'experience.yearsExperience':
@@ -39,6 +47,10 @@ export function resolveProfileValue(profile: Profile, canonicalField: string): s
       return profile.education.institution;
     case 'education.graduationYear':
       return String(profile.education.graduationYear);
+    case 'education.gpa':
+      return profile.education.gpa || '';
+    case 'education.fieldOfStudy':
+      return profile.education.fieldOfStudy || profile.education.degree;
     case 'resumeFileName':
       return profile.resumeFileName;
   }

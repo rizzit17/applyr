@@ -22,7 +22,7 @@ describe('Field Classification Engine', () => {
     expect(guess.canonicalField).toBe('personal.firstName');
     expect(guess.confidence).toBe(0.95);
     expect(guess.source).toBe('autocomplete');
-    expect(guess.targetValue).toBe('Jane');
+    expect(guess.targetValue).toBe('Rishit');
   });
 
   it('Tier 2: matches learned site mapping cache before heuristics with 0.9 confidence', () => {
@@ -50,7 +50,7 @@ describe('Field Classification Engine', () => {
     expect(guess.canonicalField).toBe('personal.location');
     expect(guess.confidence).toBe(0.9);
     expect(guess.source).toBe('cache');
-    expect(guess.targetValue).toBe('San Francisco, CA');
+    expect(guess.targetValue).toBe('Noida, India');
   });
 
   it('Tier 3: matches keyword patterns for common job form fields with >=0.7 confidence', () => {
@@ -58,47 +58,62 @@ describe('Field Classification Engine', () => {
       {
         field: { labelText: 'First Name *', name: 'first_name', type: 'text' },
         expectedKey: 'personal.firstName',
-        expectedVal: 'Jane',
+        expectedVal: 'Rishit',
       },
       {
         field: { labelText: 'Last Name', name: 'lname', type: 'text' },
         expectedKey: 'personal.lastName',
-        expectedVal: 'Doe',
+        expectedVal: 'Chaudhary',
       },
       {
         field: { labelText: 'Email address', name: 'email', htmlType: 'email', type: 'text' },
         expectedKey: 'personal.email',
-        expectedVal: 'jane.doe@example.com',
+        expectedVal: 'rishitwork28@gmail.com',
       },
       {
         field: { labelText: 'Phone number', name: 'tel', htmlType: 'tel', type: 'text' },
         expectedKey: 'personal.phone',
-        expectedVal: '+1-555-123-4567',
+        expectedVal: '+91-8076513921',
       },
       {
         field: { labelText: 'LinkedIn Profile URL', name: 'linkedin_url', type: 'text' },
         expectedKey: 'links.linkedin',
-        expectedVal: 'https://linkedin.com/in/janedoe',
+        expectedVal: 'https://www.linkedin.com/in/rishit-chaudhary17',
       },
       {
         field: { labelText: 'GitHub Account', name: 'github', type: 'text' },
         expectedKey: 'links.github',
-        expectedVal: 'https://github.com/janedoe',
+        expectedVal: 'https://github.com/rizzit17',
+      },
+      {
+        field: { labelText: 'LeetCode Profile', name: 'leetcode', type: 'text' },
+        expectedKey: 'links.leetcode',
+        expectedVal: 'https://leetcode.com/u/rishit_17/',
       },
       {
         field: { labelText: 'Current Job Title', name: 'title', type: 'text' },
         expectedKey: 'experience.currentTitle',
-        expectedVal: 'Backend Engineer',
+        expectedVal: 'Software Development Engineer',
       },
       {
         field: { labelText: 'How many years of experience do you have?', name: 'yoe', type: 'text' },
         expectedKey: 'experience.yearsExperience',
-        expectedVal: '4',
+        expectedVal: '1',
       },
       {
         field: { labelText: 'University or College', name: 'institution', type: 'text' },
         expectedKey: 'education.institution',
-        expectedVal: 'State University',
+        expectedVal: 'Vellore Institute of Technology, Vellore',
+      },
+      {
+        field: { labelText: 'Cumulative GPA / CGPA', name: 'cgpa', type: 'text' },
+        expectedKey: 'education.gpa',
+        expectedVal: '8.68 / 10',
+      },
+      {
+        field: { labelText: 'Major or Field of Study', name: 'major', type: 'text' },
+        expectedKey: 'education.fieldOfStudy',
+        expectedVal: 'Computer Science & Engineering (Internet of Things)',
       },
     ];
 
@@ -136,11 +151,16 @@ describe('Field Classification Engine', () => {
 
     const guess = classifyField(field, profile);
     expect(guess.canonicalField).toBe('customAnswers.authorized to work in us');
-    expect(guess.targetValue).toBe('Yes');
+    expect(guess.targetValue).toBe('Yes (open to remote / relocation with sponsorship)');
   });
 
   it('correctly resolves composite full name', () => {
     const fullName = resolveProfileValue(profile, 'personal.fullName');
-    expect(fullName).toBe('Jane Doe');
+    expect(fullName).toBe('Rishit Chaudhary');
+  });
+
+  it('correctly resolves challenging project answer', () => {
+    const answer = resolveProfileValue(profile, 'customAnswers.tell us about a challenging project');
+    expect(answer).toContain('Seatzy');
   });
 });

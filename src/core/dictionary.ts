@@ -154,8 +154,21 @@ export const KEYWORD_RULES: KeywordRule[] = [
       /\bother\s*website\b/i,
       /\burl\b/i,
     ],
-    negativePatterns: [/\blinkedin\b/i, /\bgithub\b/i],
+    negativePatterns: [/\blinkedin\b/i, /\bgithub\b/i, /\bleetcode\b/i],
     weight: 0.8,
+  },
+
+  // LeetCode / Coding Profile
+  {
+    canonicalField: 'links.leetcode',
+    patterns: [
+      /\bleetcode\b/i,
+      /\bleetcode\.com/i,
+      /\bcoding\s*profile\b/i,
+      /\bhackerrank\b/i,
+      /\bcodeforces\b/i,
+    ],
+    weight: 0.9,
   },
 
   // Current Title
@@ -208,10 +221,22 @@ export const KEYWORD_RULES: KeywordRule[] = [
       /\bdegree\b/i,
       /\beducation\s*level\b/i,
       /\bhighest\s*degree\b/i,
+    ],
+    negativePatterns: [/\bgpa\b/i, /\bgrade\b/i, /\bmajor\b/i],
+    weight: 0.8,
+  },
+
+  // Education Major / Field of Study
+  {
+    canonicalField: 'education.fieldOfStudy',
+    patterns: [
       /\bmajor\b/i,
       /\bfield\s*of\s*study\b/i,
+      /\bspecialization\b/i,
+      /\bdiscipline\b/i,
+      /\bbranch\b/i,
     ],
-    weight: 0.8,
+    weight: 0.85,
   },
 
   // Education Institution / School
@@ -235,6 +260,19 @@ export const KEYWORD_RULES: KeywordRule[] = [
       /\bgrad\s*year\b/i,
       /\bcompletion\s*year\b/i,
       /\bend\s*year\b/i,
+    ],
+    weight: 0.85,
+  },
+
+  // Education GPA / CGPA
+  {
+    canonicalField: 'education.gpa',
+    patterns: [
+      /\bcgpa\b/i,
+      /\bgpa\b/i,
+      /\bgrade\s*point\b/i,
+      /\bpercentage\b/i,
+      /\bmarks\b/i,
     ],
     weight: 0.85,
   },

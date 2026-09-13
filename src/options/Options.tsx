@@ -502,6 +502,12 @@ export const Options: React.FC = () => {
               <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
               Local Only
             </span>
+            <img
+              src="/rishu_pfp.jpeg"
+              alt="Rishit Chaudhary"
+              className="w-8 h-8 rounded-full object-cover ring-1 ring-primary/40 shadow-sm"
+              onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+            />
           </div>
         </header>
 
@@ -755,6 +761,17 @@ export const Options: React.FC = () => {
                         onChange={(e) => updateNestedField('links', 'portfolio', e.target.value)}
                       />
                     </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <span className="w-24 text-xs font-medium text-on-surface-variant shrink-0">LeetCode</span>
+                      <input
+                        className="flex-1 bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="url"
+                        placeholder="https://leetcode.com/u/username"
+                        value={currentProfile.links.leetcode || ''}
+                        onChange={(e) => updateNestedField('links', 'leetcode', e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -837,6 +854,28 @@ export const Options: React.FC = () => {
                         type="number"
                         value={currentProfile.education.graduationYear}
                         onChange={(e) => updateNestedField('education', 'graduationYear', Number(e.target.value))}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">GPA / CGPA</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. 8.68 / 10"
+                        value={currentProfile.education.gpa || ''}
+                        onChange={(e) => updateNestedField('education', 'gpa', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="md:col-span-2 flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Major / Specialization</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. Computer Science & Engineering (IoT)"
+                        value={currentProfile.education.fieldOfStudy || ''}
+                        onChange={(e) => updateNestedField('education', 'fieldOfStudy', e.target.value)}
                       />
                     </div>
                   </div>

@@ -193,19 +193,26 @@ export const Popup: React.FC = () => {
         </select>
 
         {activeProfile && (
-          <div className="pt-2 mt-1 border-t border-outline-variant/50 flex flex-col gap-1 text-xs text-on-surface-variant">
-            <div className="flex justify-between items-center">
-              <span>Candidate:</span>
-              <span className="font-semibold text-on-surface">
-                {activeProfile.personal.firstName} {activeProfile.personal.lastName}
-              </span>
+          <div className="pt-2 mt-1 border-t border-outline-variant/50 flex items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2 min-w-0">
+              <img
+                src="/rishu_pfp.jpeg"
+                alt="Avatar"
+                className="w-7 h-7 rounded-full object-cover ring-1 ring-outline-variant shrink-0"
+                onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+              />
+              <div className="flex flex-col min-w-0">
+                <span className="font-semibold text-on-surface truncate">
+                  {activeProfile.personal.firstName} {activeProfile.personal.lastName}
+                </span>
+                <span className="text-[11px] text-primary truncate max-w-[150px]">
+                  {activeProfile.resumeFileName}
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between items-center">
-              <span>Resume File:</span>
-              <span className="text-primary truncate max-w-[180px]">
-                {activeProfile.resumeFileName}
-              </span>
-            </div>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant shrink-0">
+              {activeProfile.education.gpa ? `GPA ${activeProfile.education.gpa.split('/')[0].trim()}` : 'Ready'}
+            </span>
           </div>
         )}
       </div>
