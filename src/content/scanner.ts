@@ -143,20 +143,38 @@ export function resolveLabelContext(el: HTMLElement, doc: Document | ShadowRoot)
     if (!labelText && el.getAttribute('aria-labelledby')) {
       const labelledBy = el.getAttribute('aria-labelledby') || '';
       const ids = labelledBy.split(/\s+/);
-      const parts: string[] = [];
       for (const id of ids) {
         if (!id) continue;
         try {
           const refEl = doc.querySelector(`#${CSS.escape(id)}`);
-          if (refEl && refEl.textContent) {
-            parts.push(refEl.textContent.trim());
+          if (refEl) {
+            const m7 = refEl.querySelector('.M7eMe') || (refEl.classList.contains('M7eMe') ? refEl : null);
+            if (m7 && m7.textContent?.trim()) {
+              labelText = m7.textContent.trim();
+              break;
+            }
           }
         } catch {
           // Ignore
         }
       }
-      if (parts.length > 0) {
-        labelText = parts.join(' ');
+
+      if (!labelText) {
+        const parts: string[] = [];
+        for (const id of ids) {
+          if (!id) continue;
+          try {
+            const refEl = doc.querySelector(`#${CSS.escape(id)}`);
+            if (refEl && refEl.textContent) {
+              parts.push(refEl.textContent.trim());
+            }
+          } catch {
+            // Ignore
+          }
+        }
+        if (parts.length > 0) {
+          labelText = parts.join(' ');
+        }
       }
     }
 
@@ -194,7 +212,10 @@ export function resolveLabelContext(el: HTMLElement, doc: Document | ShadowRoot)
     console.warn('Error resolving label context:', err);
   }
 
-  return { labelText, nearbyText };
+  return {
+    labelText: labelText.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim(),
+    nearbyText: nearbyText.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim(),
+  };
 }
 
 /**
@@ -268,8 +289,11 @@ export function scanForm(root: Document | ShadowRoot = document): ScanResult {
       const id = (el.getAttribute('id') || '').trim();
       const placeholder = (el.getAttribute('placeholder') || '').trim();
       const autocomplete = (el.getAttribute('autocomplete') || '').trim();
-      const disabled = (el as HTMLInputElement).disabled || el.getAttribute('aria-disabled') === 'true';
-      const readOnly = (el as HTMLInputElement).readOnly || el.getAttribute('aria-readonly') === 'true';
+      const isNative = el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement;
+      const disabled = isNative
+        ? (el as HTMLInputElement).disabled
+        : el.getAttribute('aria-disabled') === 'true' && el.getAttribute('role') !== 'radio' && el.getAttribute('role') !== 'radiogroup';
+      const readOnly = isNative ? (el as HTMLInputElement).readOnly : el.getAttribute('aria-readonly') === 'true';
 
       const { labelText, nearbyText } = resolveLabelContext(el, root);
 
@@ -283,7 +307,16 @@ export function scanForm(root: Document | ShadowRoot = document): ScanResult {
           .map((r) => {
             const clone = r.cloneNode(true) as HTMLElement;
             clone.querySelectorAll('input, textarea').forEach((c) => c.remove());
-            return (r.getAttribute('data-value') || r.getAttribute('aria-label') || clone.textContent || '').trim();
+            const labelEl = r.closest('label');
+            const labelClone = labelEl ? (labelEl.cloneNode(true) as HTMLElement) : null;
+            if (labelClone) labelClone.querySelectorAll('input, textarea').forEach((c) => c.remove());
+            return (
+              r.getAttribute('data-value') ||
+              r.getAttribute('aria-label') ||
+              clone.textContent ||
+              labelClone?.textContent ||
+              ''
+            ).replace(/\u00a0/g, ' ').trim();
           })
           .filter((t) => t.length > 0 && !t.toLowerCase().startsWith('other') && t !== '__other_option__');
       }

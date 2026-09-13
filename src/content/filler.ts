@@ -102,34 +102,83 @@ function cleanText(text: string): string {
  * Clicks a radio element safely, dispatching focus, mouse events, native click,
  * and clicking any inner toggle element for frameworks like Google Forms Wiz.
  */
+/**
+ * Clicks a radio element safely, dispatching focus, mouse events, native click,
+ * and clicking any inner toggle element for frameworks like Google Forms Wiz.
+ */
 function clickRadioElement(opt: HTMLElement): void {
+  try {
+    opt.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  } catch {
+    // Ignore scroll failure
+  }
+
+  // Remove any blocking aria-disabled or pointer-events: none on the radio or its container
+  opt.removeAttribute('aria-disabled');
+  opt.style.pointerEvents = 'auto';
+
+  const label = opt.closest<HTMLElement>('label, .docssharedWizToggleLabeledContainer');
+  if (label) {
+    label.removeAttribute('aria-disabled');
+    label.style.pointerEvents = 'auto';
+  }
+
   try {
     opt.focus();
   } catch {
     // Ignore focus failure
   }
 
-  // 1. Mouse events on the radio container
-  const mouseEvents = ['mousedown', 'mouseup', 'click'];
-  for (const ev of mouseEvents) {
-    opt.dispatchEvent(new MouseEvent(ev, { bubbles: true, cancelable: true }));
+  // Find all clickable targets: label, inner circle, text span, and radio container
+  const circle =
+    opt.querySelector<HTMLElement>(
+      '.AB7Lab, .vd3tt, .rseUEf, div[class*="exportInnerCircle"], .quantumWizTogglePaperradioEl, [role="presentation"]'
+    ) || (opt.firstElementChild as HTMLElement);
+  const textSpan = label?.querySelector<HTMLElement>('.aDTYNe, span');
+
+  const targets = [label, circle, textSpan, opt].filter(Boolean) as HTMLElement[];
+
+  // 1. Direct clicks on label, circle, and opt
+  if (label) {
+    label.click();
+  }
+  if (circle && circle !== label) {
+    circle.click();
   }
   opt.click();
 
-  // 2. In ARIA radio, update aria-checked attribute
-  if (opt.getAttribute('role') === 'radio') {
-    opt.setAttribute('aria-checked', 'true');
+  // 2. Full pointer and mouse event sequence for reactive framework controllers (Google Forms Wiz, React, etc.)
+  for (const target of targets) {
+    if (typeof PointerEvent !== 'undefined') {
+      try {
+        target.dispatchEvent(
+          new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerType: 'mouse', isPrimary: true })
+        );
+      } catch {
+        // Ignore PointerEvent failure
+      }
+    }
+    target.dispatchEvent(
+      new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0, buttons: 1 })
+    );
+    if (typeof PointerEvent !== 'undefined') {
+      try {
+        target.dispatchEvent(
+          new PointerEvent('pointerup', { bubbles: true, cancelable: true, pointerType: 'mouse', isPrimary: true })
+        );
+      } catch {
+        // Ignore PointerEvent failure
+      }
+    }
+    target.dispatchEvent(
+      new MouseEvent('mouseup', { bubbles: true, cancelable: true, button: 0, buttons: 0 })
+    );
+    target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
   }
 
-  // 3. Click any inner clickable toggle / label elements (Google Forms Wiz components)
-  const innerClickable = opt.querySelector<HTMLElement>(
-    '.quantumWizTogglePaperradioEl, .docssharedWHey6d, .aDTYNe, span, label'
-  );
-  if (innerClickable && innerClickable !== opt) {
-    for (const ev of mouseEvents) {
-      innerClickable.dispatchEvent(new MouseEvent(ev, { bubbles: true, cancelable: true }));
-    }
-    innerClickable.click();
+  // 3. Ensure aria-checked is set on the radio option
+  if (opt.getAttribute('role') === 'radio') {
+    opt.setAttribute('aria-checked', 'true');
   }
 
   // 4. Dispatch change event to notify any listeners
@@ -222,17 +271,27 @@ function fillRadioOrCheckbox(el: HTMLElement, targetValue: string): boolean {
           clone.querySelectorAll('input, textarea').forEach((c) => c.remove());
           const text = (clone.textContent || '').trim();
 
+          const labelEl = opt.closest('label');
+          const labelClone = labelEl ? (labelEl.cloneNode(true) as HTMLElement) : null;
+          if (labelClone) {
+            labelClone.querySelectorAll('input, textarea').forEach((c) => c.remove());
+          }
+          const labelText = (labelClone?.textContent || '').trim();
+
           const isOther =
             dataVal === '__other_option__' ||
             ariaLabel.toLowerCase().startsWith('other') ||
             text.toLowerCase().startsWith('other') ||
+            labelText.toLowerCase().startsWith('other') ||
             opt.querySelector('.Hvn9fb') !== null ||
-            opt.querySelector('input[type="text"]') !== null;
+            opt.querySelector('input[type="text"]') !== null ||
+            (labelEl !== null && labelEl.querySelector('.Hvn9fb') !== null) ||
+            (labelEl !== null && labelEl.querySelector('input[type="text"]') !== null);
 
-          const raw = (dataVal || ariaLabel || text).toLowerCase().trim();
+          const raw = (dataVal || ariaLabel || text || labelText).toLowerCase().trim();
           const clean = cleanText(raw);
 
-          return { opt, dataVal, ariaLabel, text, raw, clean, isOther };
+          return { opt, dataVal, ariaLabel, text, labelText, raw, clean, isOther };
         };
 
         const parsedOptions = ariaRadios.map(parseOption);
@@ -252,16 +311,14 @@ function fillRadioOrCheckbox(el: HTMLElement, targetValue: string): boolean {
           if (matches) {
             clickRadioElement(item.opt);
 
-            // Deselect and clear any auxiliary "Other" text input and radio
-            for (const otherItem of parsedOptions.filter((o) => o.isOther)) {
-              otherItem.opt.setAttribute('aria-checked', 'false');
-            }
+            // Clear any auxiliary "Other" text input if present
             const auxInputs = el.querySelectorAll<HTMLInputElement>(
               'input.Hvn9fb, input[aria-label*="other" i], input[type="text"]'
             );
             for (const auxInput of Array.from(auxInputs)) {
               if (auxInput.value) {
                 setNativeValue(auxInput, '');
+                dispatchInputEvents(auxInput, false);
               }
             }
             return true;
@@ -274,6 +331,7 @@ function fillRadioOrCheckbox(el: HTMLElement, targetValue: string): boolean {
           clickRadioElement(otherOption.opt);
           const auxInput =
             otherOption.opt.querySelector<HTMLInputElement>('input') ||
+            otherOption.opt.closest('label')?.querySelector<HTMLInputElement>('input') ||
             el.querySelector<HTMLInputElement>('input.Hvn9fb, input[aria-label*="other" i], input[type="text"]');
           if (auxInput) {
             setNativeValue(auxInput, targetValue);

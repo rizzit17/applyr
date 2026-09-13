@@ -58,12 +58,14 @@ chrome.runtime.onMessage.addListener((message: ExtensionMessage, _sender, sendRe
 
         // Ensure content script is ready; if not, inject it on-demand
         try {
-          await chrome.tabs.sendMessage(activeTab.id, {
+          const result = await chrome.tabs.sendMessage(activeTab.id, {
             type: 'RUN_FILL',
             profile,
             cache: siteCache,
             settings,
           });
+          sendResponse(result);
+          return;
         } catch {
           // Injection fallback if content script wasn't loaded
           await chrome.scripting.executeScript({
@@ -83,16 +85,6 @@ chrome.runtime.onMessage.addListener((message: ExtensionMessage, _sender, sendRe
           sendResponse(res);
           return;
         }
-
-        // Wait for fill result relayed by content script
-        const result = await chrome.tabs.sendMessage(activeTab.id, {
-          type: 'RUN_FILL',
-          profile,
-          cache: siteCache,
-          settings,
-        });
-        sendResponse(result);
-        return;
       }
 
       if (message.type === 'LEARN_CORRECTION') {

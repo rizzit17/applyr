@@ -251,7 +251,7 @@ export const KEYWORD_RULES: KeywordRule[] = [
       /\beducation\s*level\b/i,
       /\bhighest\s*degree\b/i,
     ],
-    negativePatterns: [/\bgpa\b/i, /\bgrade\b/i, /\bmajor\b/i],
+    negativePatterns: [/\bgpa\b/i, /\bgrade\b/i, /\bmajor\b/i, /\bpost\s*graduation\b/i, /\bmaster\b/i],
     weight: 0.8,
   },
 
@@ -290,6 +290,7 @@ export const KEYWORD_RULES: KeywordRule[] = [
       /\bcompletion\s*year\b/i,
       /\bend\s*year\b/i,
     ],
+    negativePatterns: [/\bpost\s*graduation\b/i, /\bmaster\b/i],
     weight: 0.85,
   },
 
