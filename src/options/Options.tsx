@@ -254,10 +254,12 @@ export const Options: React.FC = () => {
   const [qaFilter, setQaFilter] = useState<'all' | 'exact' | 'eeo' | 'behavioral'>('all');
   const [qaSearchQuery, setQaSearchQuery] = useState<string>('');
   const [isQaModalOpen, setIsQaModalOpen] = useState<boolean>(false);
+  const [editingQaItem, setEditingQaItem] = useState<QAItem | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>('');
   const [newCategory, setNewCategory] = useState<'exact' | 'eeo' | 'behavioral'>('exact');
   const [newTag, setNewTag] = useState<string>('');
   const [newAnswer, setNewAnswer] = useState<string>('');
+  const [newKeywords, setNewKeywords] = useState<string>('');
 
   // Site Mappings State
   const [mappingSearchQuery, setMappingSearchQuery] = useState<string>('');
@@ -467,42 +469,136 @@ export const Options: React.FC = () => {
   };
 
   // Q&A Handlers
-  const handleAddQARule = () => {
+  const handleOpenAddModal = () => {
+    setEditingQaItem(null);
+    setNewQuestion('');
+    setNewCategory('exact');
+    setNewTag('');
+    setNewAnswer('');
+    setNewKeywords('');
+    setIsQaModalOpen(true);
+  };
+
+  const handleOpenEditModal = (item: QAItem) => {
+    setEditingQaItem(item);
+    setNewQuestion(item.question);
+    setNewCategory(item.category);
+    setNewTag(item.tag || '');
+    setNewAnswer(item.answer);
+    setNewKeywords(item.keywords || '');
+    setIsQaModalOpen(true);
+  };
+
+  const handleCloseQaModal = () => {
+    setIsQaModalOpen(false);
+    setEditingQaItem(null);
+    setNewQuestion('');
+    setNewTag('');
+    setNewAnswer('');
+    setNewKeywords('');
+  };
+
+  const handleSaveQARule = async () => {
     if (!newQuestion.trim() || !newAnswer.trim()) {
       alert('Please provide both question text and target answer.');
       return;
     }
 
-    const item: QAItem = {
-      id: `qa-${Date.now()}`,
-      category: newCategory,
-      question: newQuestion.trim(),
-      tag: newTag.trim() || (newCategory === 'eeo' ? 'EEO' : 'Custom'),
-      answer: newAnswer.trim(),
-      keywords: newQuestion.toLowerCase(),
-    };
+    const trimmedQuestion = newQuestion.trim();
+    const trimmedAnswer = newAnswer.trim();
+    const trimmedTag = newTag.trim() || (newCategory === 'eeo' ? 'EEO' : 'Custom');
+    const trimmedKeywords = newKeywords.trim() || trimmedQuestion.toLowerCase();
 
-    const next = [item, ...qaItems];
-    setQaItems(next);
-    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
-      chrome.storage.local.set({ customQaItems: next });
+    if (editingQaItem) {
+      // Editing existing QA rule
+      const updatedItem: QAItem = {
+        ...editingQaItem,
+        category: newCategory,
+        question: trimmedQuestion,
+        tag: trimmedTag,
+        answer: trimmedAnswer,
+        keywords: trimmedKeywords,
+      };
+
+      const next = qaItems.map((item) => (item.id === editingQaItem.id ? updatedItem : item));
+      setQaItems(next);
+
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.set({ customQaItems: next });
+      } else {
+        localStorage.setItem('applyr_custom_questions', JSON.stringify(next));
+      }
+
+      // Sync with stored profiles' customAnswers for autofill
+      const oldKey = editingQaItem.question.toLowerCase().trim();
+      const newKey = trimmedQuestion.toLowerCase().trim();
+      const updatedProfiles = profiles.map((p) => {
+        const ca = { ...(p.customAnswers || {}) };
+        if (oldKey !== newKey && ca[oldKey] !== undefined) {
+          delete ca[oldKey];
+        }
+        ca[newKey] = trimmedAnswer;
+        return { ...p, customAnswers: ca };
+      });
+      setProfiles(updatedProfiles);
+      await saveProfiles(updatedProfiles);
+
+      handleCloseQaModal();
+      showToast('Question & answer updated');
     } else {
-      localStorage.setItem('applyr_custom_questions', JSON.stringify(next));
+      // Adding new QA rule
+      const item: QAItem = {
+        id: `qa-${Date.now()}`,
+        category: newCategory,
+        question: trimmedQuestion,
+        tag: trimmedTag,
+        answer: trimmedAnswer,
+        keywords: trimmedKeywords,
+      };
+
+      const next = [item, ...qaItems];
+      setQaItems(next);
+
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.set({ customQaItems: next });
+      } else {
+        localStorage.setItem('applyr_custom_questions', JSON.stringify(next));
+      }
+
+      // Sync with stored profiles' customAnswers for autofill
+      const newKey = trimmedQuestion.toLowerCase().trim();
+      const updatedProfiles = profiles.map((p) => {
+        const ca = { ...(p.customAnswers || {}) };
+        ca[newKey] = trimmedAnswer;
+        return { ...p, customAnswers: ca };
+      });
+      setProfiles(updatedProfiles);
+      await saveProfiles(updatedProfiles);
+
+      handleCloseQaModal();
+      showToast('Added question override');
     }
-    setIsQaModalOpen(false);
-    setNewQuestion('');
-    setNewAnswer('');
-    setNewTag('');
-    showToast('Added question override');
   };
 
-  const handleDeleteQARule = (id: string) => {
+  const handleDeleteQARule = async (id: string) => {
+    const target = qaItems.find((item) => item.id === id);
     const next = qaItems.filter((item) => item.id !== id);
     setQaItems(next);
     if (typeof chrome !== 'undefined' && chrome.storage?.local) {
       chrome.storage.local.set({ customQaItems: next });
     } else {
       localStorage.setItem('applyr_custom_questions', JSON.stringify(next));
+    }
+
+    if (target) {
+      const key = target.question.toLowerCase().trim();
+      const updatedProfiles = profiles.map((p) => {
+        const ca = { ...(p.customAnswers || {}) };
+        delete ca[key];
+        return { ...p, customAnswers: ca };
+      });
+      setProfiles(updatedProfiles);
+      await saveProfiles(updatedProfiles);
     }
     showToast('Question removed');
   };
@@ -551,7 +647,7 @@ export const Options: React.FC = () => {
         if (activeTab === 'settings') handleSaveSettings();
       }
       if (e.key === 'Escape') {
-        setIsQaModalOpen(false);
+        handleCloseQaModal();
         setQaSearchQuery('');
         setMappingSearchQuery('');
       }
@@ -1224,7 +1320,7 @@ export const Options: React.FC = () => {
                     Import EEO Defaults
                   </button>
                   <button
-                    onClick={() => setIsQaModalOpen(true)}
+                    onClick={handleOpenAddModal}
                     className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold shadow-sm transition-colors"
                     type="button"
                   >
@@ -1310,7 +1406,7 @@ export const Options: React.FC = () => {
                       <th className="py-3 px-4 w-32" scope="col">
                         Type
                       </th>
-                      <th className="py-3 px-4 w-16 text-right" scope="col">
+                      <th className="py-3 px-4 w-24 text-right" scope="col">
                         Action
                       </th>
                     </tr>
@@ -1327,8 +1423,15 @@ export const Options: React.FC = () => {
                           )}
                         </td>
                         <td className="py-3 px-4 align-top">
-                          <div className="p-2 rounded bg-surface-container-low text-on-surface font-medium text-xs max-w-lg">
-                            {item.answer}
+                          <div
+                            onClick={() => handleOpenEditModal(item)}
+                            className="group/ans p-2 rounded bg-surface-container-low hover:bg-surface-container hover:border-primary/40 border border-transparent text-on-surface font-medium text-xs max-w-lg cursor-pointer transition-all flex items-start justify-between gap-2"
+                            title="Click to edit answer"
+                          >
+                            <span className="break-words">{item.answer}</span>
+                            <span className="material-symbols-outlined text-[14px] text-on-surface-variant opacity-0 group-hover/ans:opacity-100 transition-opacity shrink-0 mt-0.5">
+                              edit
+                            </span>
                           </div>
                         </td>
                         <td className="py-3 px-4 align-top">
@@ -1346,14 +1449,25 @@ export const Options: React.FC = () => {
                             {item.category === 'behavioral' && 'Behavioral'}
                           </span>
                         </td>
-                        <td className="py-3 px-4 align-top text-right">
-                          <button
-                            onClick={() => handleDeleteQARule(item.id)}
-                            className="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors"
-                            title="Delete"
-                          >
-                            <span className="material-symbols-outlined text-[18px]">delete</span>
-                          </button>
+                        <td className="py-3 px-4 align-top text-right whitespace-nowrap">
+                          <div className="flex items-center justify-end gap-1">
+                            <button
+                              onClick={() => handleOpenEditModal(item)}
+                              className="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors"
+                              title="Edit Question & Answer"
+                              type="button"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">edit</span>
+                            </button>
+                            <button
+                              onClick={() => handleDeleteQARule(item.id)}
+                              className="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors"
+                              title="Delete"
+                              type="button"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">delete</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1367,28 +1481,38 @@ export const Options: React.FC = () => {
                 )}
               </div>
 
-              {/* Add Question Modal */}
+              {/* Add / Edit Question Modal */}
               {isQaModalOpen && (
                 <div className="fixed inset-0 bg-inverse-surface/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                   <div className="w-full max-w-lg bg-surface-container-lowest rounded-xl border border-outline-variant shadow-xl overflow-hidden flex flex-col">
                     <div className="p-4 border-b border-outline-variant bg-surface-container-low flex items-center justify-between">
-                      <h3 className="text-base font-semibold text-on-surface">Add Question Override</h3>
+                      <div>
+                        <h3 className="text-base font-semibold text-on-surface">
+                          {editingQaItem ? 'Edit Question & Answer' : 'Add Question Override'}
+                        </h3>
+                        <p className="text-xs text-on-surface-variant mt-0.5">
+                          {editingQaItem
+                            ? 'Update the question prompt matcher, autofill response, and type.'
+                            : 'Pre-set a reliable answer for a recurring application question.'}
+                        </p>
+                      </div>
                       <button
-                        onClick={() => setIsQaModalOpen(false)}
+                        onClick={handleCloseQaModal}
                         className="p-1 text-on-surface-variant hover:text-on-surface rounded"
+                        type="button"
                       >
                         <span className="material-symbols-outlined text-[20px]">close</span>
                       </button>
                     </div>
 
-                    <div className="p-5 flex flex-col gap-4">
+                    <div className="p-5 flex flex-col gap-4 max-h-[75vh] overflow-y-auto">
                       <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-medium text-on-surface-variant">
-                          Question Prompt / Keywords
+                          Question Prompt / Matcher
                         </label>
                         <input
                           className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
-                          placeholder="e.g. Expected salary or Willing to relocate"
+                          placeholder="e.g. Expected salary or Campus ID / Register number"
                           type="text"
                           value={newQuestion}
                           onChange={(e) => setNewQuestion(e.target.value)}
@@ -1412,7 +1536,7 @@ export const Options: React.FC = () => {
                           <label className="text-xs font-medium text-on-surface-variant">Tag (Optional)</label>
                           <input
                             className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
-                            placeholder="e.g. Salary, Relocation"
+                            placeholder="e.g. VIT Campus, Academics, Salary"
                             type="text"
                             value={newTag}
                             onChange={(e) => setNewTag(e.target.value)}
@@ -1424,26 +1548,47 @@ export const Options: React.FC = () => {
                         <label className="text-xs font-medium text-on-surface-variant">Target Autofill Answer</label>
                         <textarea
                           className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
-                          placeholder="Enter the answer to fill..."
+                          placeholder="Enter the exact answer to fill..."
                           rows={3}
                           value={newAnswer}
                           onChange={(e) => setNewAnswer(e.target.value)}
                         />
                       </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-medium text-on-surface-variant">
+                          Search Keywords (Optional)
+                        </label>
+                        <input
+                          className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
+                          placeholder="e.g. campus id register roll student number"
+                          type="text"
+                          value={newKeywords}
+                          onChange={(e) => setNewKeywords(e.target.value)}
+                        />
+                        <span className="text-[11px] text-on-surface-variant">
+                          Space-separated keywords for search and fuzzy matching. Defaults to question prompt if left empty.
+                        </span>
+                      </div>
                     </div>
 
                     <div className="p-4 border-t border-outline-variant bg-surface-container-low flex justify-end gap-2">
                       <button
-                        onClick={() => setIsQaModalOpen(false)}
+                        onClick={handleCloseQaModal}
                         className="px-4 py-2 border border-outline-variant rounded-lg text-sm text-on-surface hover:bg-surface-container"
+                        type="button"
                       >
                         Cancel
                       </button>
                       <button
-                        onClick={handleAddQARule}
-                        className="px-4 py-2 bg-primary text-on-primary hover:bg-primary-container rounded-lg text-sm font-semibold"
+                        onClick={handleSaveQARule}
+                        className="px-4 py-2 bg-primary text-on-primary hover:bg-primary-container rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5"
+                        type="button"
                       >
-                        Save Question
+                        <span className="material-symbols-outlined text-[18px]">
+                          {editingQaItem ? 'check' : 'add'}
+                        </span>
+                        <span>{editingQaItem ? 'Save Changes' : 'Save Question'}</span>
                       </button>
                     </div>
                   </div>
