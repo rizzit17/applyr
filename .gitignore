@@ -29,3 +29,8 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Private context & personal documents
+PROJECTS CONTEXT/
+RESUMES/
+antigravity_prompt.md
