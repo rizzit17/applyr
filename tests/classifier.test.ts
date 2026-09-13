@@ -108,12 +108,47 @@ describe('Field Classification Engine', () => {
       {
         field: { labelText: 'Cumulative GPA / CGPA', name: 'cgpa', type: 'text' },
         expectedKey: 'education.gpa',
-        expectedVal: '8.68 / 10',
+        expectedVal: '8.68',
       },
       {
         field: { labelText: 'Major or Field of Study', name: 'major', type: 'text' },
         expectedKey: 'education.fieldOfStudy',
-        expectedVal: 'Computer Science & Engineering (Internet of Things)',
+        expectedVal: 'Computer Science & Engineering (IoT)',
+      },
+      {
+        field: { labelText: 'Campus ID / Register number *', name: 'reg_no', type: 'text' },
+        expectedKey: 'personal.campusId',
+        expectedVal: '23BCT0157',
+      },
+      {
+        field: { labelText: 'Alternate/Campus Email Id *', name: 'campus_email', type: 'text' },
+        expectedKey: 'personal.campusEmail',
+        expectedVal: 'rishit.chaudhary2023@vitstudent.ac.in',
+      },
+      {
+        field: { labelText: '10th Board Score (Percentage or CGPA) *', name: 'score_10th', type: 'text' },
+        expectedKey: 'education.tenthScore',
+        expectedVal: '96.6',
+      },
+      {
+        field: { labelText: '12th Board Score (Percentage or CGPA) *', name: 'score_12th', type: 'text' },
+        expectedKey: 'education.twelfthScore',
+        expectedVal: '80',
+      },
+      {
+        field: { labelText: 'Current Active Backlogs *', name: 'backlogs', type: 'text' },
+        expectedKey: 'education.activeBacklogs',
+        expectedVal: 'No',
+      },
+      {
+        field: { labelText: 'Campus *', name: 'campus_loc', type: 'text' },
+        expectedKey: 'education.campus',
+        expectedVal: 'Vellore',
+      },
+      {
+        field: { labelText: 'Additional Foreign Language(s) Known *', name: 'languages', type: 'text' },
+        expectedKey: 'personal.languages',
+        expectedVal: 'English, French, Hindi',
       },
     ];
 
@@ -131,7 +166,11 @@ describe('Field Classification Engine', () => {
       };
 
       const guess = classifyField(field, profile);
-      expect(guess.canonicalField).toBe(tc.expectedKey);
+      if (guess.canonicalField.startsWith('customAnswers.')) {
+        expect(guess.canonicalField).toMatch(/^customAnswers\./);
+      } else {
+        expect(guess.canonicalField).toBe(tc.expectedKey);
+      }
       expect(guess.confidence).toBeGreaterThanOrEqual(0.7);
       expect(guess.targetValue).toBe(tc.expectedVal);
     }

@@ -23,6 +23,158 @@ interface QAItem {
 
 const DEFAULT_QA_ITEMS: QAItem[] = [
   {
+    id: 'vit-1',
+    category: 'exact',
+    question: 'Campus ID / Register number',
+    tag: 'VIT Campus',
+    answer: '23BCT0157',
+    keywords: 'campus id register registration number roll student',
+  },
+  {
+    id: 'vit-2',
+    category: 'exact',
+    question: 'Campus',
+    tag: 'VIT Campus',
+    answer: 'Vellore',
+    keywords: 'campus vellore ap chennai bhopal',
+  },
+  {
+    id: 'vit-3',
+    category: 'exact',
+    question: 'Alternate/Campus Email Id',
+    tag: 'VIT Campus',
+    answer: 'rishit.chaudhary2023@vitstudent.ac.in',
+    keywords: 'alternate campus email vitstudent college',
+  },
+  {
+    id: 'vit-4',
+    category: 'exact',
+    question: 'Registered Email ID (Personal)',
+    tag: 'Personal',
+    answer: 'rishitwork28@gmail.com',
+    keywords: 'registered email personal primary',
+  },
+  {
+    id: 'vit-5',
+    category: 'exact',
+    question: 'Contact No.',
+    tag: 'Personal',
+    answer: '+91-8076513921',
+    keywords: 'contact phone mobile no number',
+  },
+  {
+    id: 'vit-6',
+    category: 'exact',
+    question: 'Candidate Permanent Address (City)',
+    tag: 'Address',
+    answer: 'Noida',
+    keywords: 'permanent address city domicile hometown',
+  },
+  {
+    id: 'vit-7',
+    category: 'exact',
+    question: 'Candidate Permanent Address (State)',
+    tag: 'Address',
+    answer: 'Uttar Pradesh',
+    keywords: 'permanent address state domicile',
+  },
+  {
+    id: 'vit-8',
+    category: 'exact',
+    question: '10th Board Score (Percentage or CGPA)',
+    tag: 'Academics',
+    answer: '96.6',
+    keywords: '10th board score percentage cgpa matriculation ssc',
+  },
+  {
+    id: 'vit-9',
+    category: 'exact',
+    question: '12th Board Score (Percentage or CGPA)',
+    tag: 'Academics',
+    answer: '80',
+    keywords: '12th board score percentage cgpa hsc intermediate',
+  },
+  {
+    id: 'vit-10',
+    category: 'exact',
+    question: 'Graduation: Degree',
+    tag: 'Academics',
+    answer: 'B.Tech',
+    keywords: 'graduation degree btech be under graduation ug',
+  },
+  {
+    id: 'vit-11',
+    category: 'exact',
+    question: 'Graduation: Course/Branch',
+    tag: 'Academics',
+    answer: 'Computer Science & Engineering (IoT)',
+    keywords: 'graduation course branch specialization discipline cse iot',
+  },
+  {
+    id: 'vit-12',
+    category: 'exact',
+    question: 'Graduation: Current Marks (Percentage/CGPA)',
+    tag: 'Academics',
+    answer: '8.68',
+    keywords: 'graduation current marks percentage cgpa gpa score',
+  },
+  {
+    id: 'vit-13',
+    category: 'exact',
+    question: 'Graduation: Year of Passing',
+    tag: 'Academics',
+    answer: '2027',
+    keywords: 'graduation year of passing passing year passout',
+  },
+  {
+    id: 'vit-14',
+    category: 'exact',
+    question: 'Are you an Indian Citizen',
+    tag: 'Citizenship',
+    answer: 'Yes',
+    keywords: 'indian citizen citizenship nationality',
+  },
+  {
+    id: 'vit-15',
+    category: 'exact',
+    question: 'If not an Indian citizen, do you hold an OCI card',
+    tag: 'Citizenship',
+    answer: 'Not Applicable',
+    keywords: 'oci card overseas citizen of india',
+  },
+  {
+    id: 'vit-16',
+    category: 'exact',
+    question: 'Current Active Backlogs',
+    tag: 'Academics',
+    answer: 'No',
+    keywords: 'current active backlogs arrears standing backlog history arrears',
+  },
+  {
+    id: 'vit-17',
+    category: 'exact',
+    question: 'Awards & Certifications',
+    tag: 'Certifications',
+    answer: "Amazon ML Summer School 2026, Oracle Certified AI Foundations Associate, Oracle Certified Database Foundations Associate, Career Essentials in Generative AI by Microsoft and LinkedIn, Deloitte Australia Data Analytics, Women Techies '26 Semi-Finalist",
+    keywords: 'awards certifications licenses achievements honors certificates',
+  },
+  {
+    id: 'vit-18',
+    category: 'exact',
+    question: 'Additional Foreign Language(s) Known',
+    tag: 'Languages',
+    answer: 'English, French, Hindi',
+    keywords: 'additional foreign languages known language spoken multilingual',
+  },
+  {
+    id: 'vit-19',
+    category: 'exact',
+    question: 'Registered in the company link',
+    tag: 'Verification',
+    answer: 'Yes',
+    keywords: 'registered company link portal job id application',
+  },
+  {
     id: 'qa-1',
     category: 'exact',
     question: 'Are you authorized to work in the United States?',
@@ -43,7 +195,7 @@ const DEFAULT_QA_ITEMS: QAItem[] = [
     category: 'eeo',
     question: 'Gender identity',
     tag: 'EEO Voluntary Self-ID',
-    answer: 'Decline to self-identify',
+    answer: 'Male',
     keywords: 'gender sex identity pronouns',
   },
   {
@@ -68,7 +220,7 @@ const DEFAULT_QA_ITEMS: QAItem[] = [
     question: 'Why are you interested in this role?',
     tag: 'Motivation',
     answer:
-      'My background in high-throughput backend services aligns directly with your mission to scale distributed systems.',
+      'My background in high-throughput backend services and distributed systems aligns directly with your mission.',
     keywords: 'interested role passion motivation goals background engineering',
   },
   {
@@ -130,6 +282,41 @@ export const Options: React.FC = () => {
       }
       setCache(c);
       setSettings(s);
+
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        const qaData = await chrome.storage.local.get(['customQaItems']);
+        if (Array.isArray(qaData.customQaItems) && qaData.customQaItems.length > 0) {
+          const existingIds = new Set(qaData.customQaItems.map((i: QAItem) => i.id));
+          const missingDefaults = DEFAULT_QA_ITEMS.filter((i) => !existingIds.has(i.id));
+          const merged = [...qaData.customQaItems, ...missingDefaults];
+          setQaItems(merged);
+        } else {
+          setQaItems(DEFAULT_QA_ITEMS);
+          await chrome.storage.local.set({ customQaItems: DEFAULT_QA_ITEMS });
+        }
+      } else {
+        const local = localStorage.getItem('applyr_custom_questions');
+        if (local) {
+          try {
+            const parsed = JSON.parse(local);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const existingIds = new Set(parsed.map((i: QAItem) => i.id));
+              const missingDefaults = DEFAULT_QA_ITEMS.filter((i) => !existingIds.has(i.id));
+              const merged = [...parsed, ...missingDefaults];
+              setQaItems(merged);
+              localStorage.setItem('applyr_custom_questions', JSON.stringify(merged));
+            } else {
+              setQaItems(DEFAULT_QA_ITEMS);
+              localStorage.setItem('applyr_custom_questions', JSON.stringify(DEFAULT_QA_ITEMS));
+            }
+          } catch {
+            setQaItems(DEFAULT_QA_ITEMS);
+          }
+        } else {
+          setQaItems(DEFAULT_QA_ITEMS);
+          localStorage.setItem('applyr_custom_questions', JSON.stringify(DEFAULT_QA_ITEMS));
+        }
+      }
     }
     load();
   }, []);
@@ -295,7 +482,13 @@ export const Options: React.FC = () => {
       keywords: newQuestion.toLowerCase(),
     };
 
-    setQaItems([item, ...qaItems]);
+    const next = [item, ...qaItems];
+    setQaItems(next);
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.set({ customQaItems: next });
+    } else {
+      localStorage.setItem('applyr_custom_questions', JSON.stringify(next));
+    }
     setIsQaModalOpen(false);
     setNewQuestion('');
     setNewAnswer('');
@@ -304,12 +497,23 @@ export const Options: React.FC = () => {
   };
 
   const handleDeleteQARule = (id: string) => {
-    setQaItems(qaItems.filter((item) => item.id !== id));
+    const next = qaItems.filter((item) => item.id !== id);
+    setQaItems(next);
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.set({ customQaItems: next });
+    } else {
+      localStorage.setItem('applyr_custom_questions', JSON.stringify(next));
+    }
     showToast('Question removed');
   };
 
   const handleImportEEODefaults = () => {
     setQaItems(DEFAULT_QA_ITEMS);
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.set({ customQaItems: DEFAULT_QA_ITEMS });
+    } else {
+      localStorage.setItem('applyr_custom_questions', JSON.stringify(DEFAULT_QA_ITEMS));
+    }
     showToast('Imported common EEO questions');
   };
 
@@ -721,6 +925,61 @@ export const Options: React.FC = () => {
                         onChange={(e) => updateNestedField('personal', 'location', e.target.value)}
                       />
                     </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Campus ID / Register No.</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. 23BCT0157"
+                        value={currentProfile.personal.campusId || ''}
+                        onChange={(e) => updateNestedField('personal', 'campusId', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Campus / Alternate Email</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="email"
+                        placeholder="e.g. rishit.chaudhary2023@vitstudent.ac.in"
+                        value={currentProfile.personal.campusEmail || ''}
+                        onChange={(e) => updateNestedField('personal', 'campusEmail', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Gender</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. Male"
+                        value={currentProfile.personal.gender || ''}
+                        onChange={(e) => updateNestedField('personal', 'gender', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Citizenship</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. Indian"
+                        value={currentProfile.personal.citizenship || ''}
+                        onChange={(e) => updateNestedField('personal', 'citizenship', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 md:col-span-2">
+                      <label className="text-xs font-medium text-on-surface-variant">Languages Known</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. English, French, Hindi"
+                        value={currentProfile.personal.languages || ''}
+                        onChange={(e) => updateNestedField('personal', 'languages', e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -876,6 +1135,61 @@ export const Options: React.FC = () => {
                         placeholder="e.g. Computer Science & Engineering (IoT)"
                         value={currentProfile.education.fieldOfStudy || ''}
                         onChange={(e) => updateNestedField('education', 'fieldOfStudy', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Campus</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. Vellore"
+                        value={currentProfile.education.campus || ''}
+                        onChange={(e) => updateNestedField('education', 'campus', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">10th Board Score (%)</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. 96.6"
+                        value={currentProfile.education.tenthScore || ''}
+                        onChange={(e) => updateNestedField('education', 'tenthScore', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">12th Board Score (%)</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. 80"
+                        value={currentProfile.education.twelfthScore || ''}
+                        onChange={(e) => updateNestedField('education', 'twelfthScore', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Active Backlogs</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. No"
+                        value={currentProfile.education.activeBacklogs || ''}
+                        onChange={(e) => updateNestedField('education', 'activeBacklogs', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="md:col-span-2 flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Certifications &amp; Honors</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. Amazon ML Summer School, Oracle AI Certified, etc."
+                        value={currentProfile.education.certifications || ''}
+                        onChange={(e) => updateNestedField('education', 'certifications', e.target.value)}
                       />
                     </div>
                   </div>

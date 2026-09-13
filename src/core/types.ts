@@ -12,6 +12,11 @@ export interface ProfilePersonal {
   city?: string;
   state?: string;
   country?: string;
+  campusId?: string;
+  campusEmail?: string;
+  gender?: string;
+  citizenship?: string;
+  languages?: string;
 }
 
 export interface ProfileLinks {
@@ -33,6 +38,11 @@ export interface ProfileEducation {
   graduationYear: number;
   gpa?: string;
   fieldOfStudy?: string;
+  campus?: string;
+  tenthScore?: string;
+  twelfthScore?: string;
+  activeBacklogs?: string;
+  certifications?: string;
 }
 
 export interface Profile {

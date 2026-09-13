@@ -133,6 +133,39 @@ function fillRadioOrCheckbox(el: HTMLElement, targetValue: string): boolean {
       }
     }
 
+    // ARIA radiogroup or Google Forms question block containing radio options
+    if (el.getAttribute('role') === 'radiogroup' || el.classList.contains('Qr7Oae')) {
+      const radioOptions = el.querySelectorAll<HTMLElement>('[role="radio"]');
+      for (const opt of radioOptions) {
+        const optText = (opt.getAttribute('data-value') || opt.getAttribute('aria-label') || opt.textContent || '').toLowerCase().trim();
+        const matches =
+          optText === normTarget ||
+          optText.includes(normTarget) ||
+          normTarget.includes(optText) ||
+          (isAffirmative && (optText === 'yes' || optText.includes('yes'))) ||
+          (isNegative && (optText === 'no' || optText.includes('no')));
+        if (matches) {
+          opt.click();
+          return true;
+        }
+      }
+    }
+
+    // Direct ARIA radio
+    if (el.getAttribute('role') === 'radio') {
+      const optText = (el.getAttribute('data-value') || el.getAttribute('aria-label') || el.textContent || '').toLowerCase().trim();
+      const matches =
+        optText === normTarget ||
+        optText.includes(normTarget) ||
+        normTarget.includes(optText) ||
+        (isAffirmative && (optText === 'yes' || optText.includes('yes'))) ||
+        (isNegative && (optText === 'no' || optText.includes('no')));
+      if (matches) {
+        el.click();
+        return true;
+      }
+    }
+
     return false;
   } catch (err) {
     console.warn('Radio/checkbox fill error:', err);

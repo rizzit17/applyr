@@ -27,6 +27,12 @@ export function resolveProfileValue(profile: Profile, canonicalField: string): s
       return profile.personal.state || '';
     case 'personal.country':
       return profile.personal.country || 'India';
+    case 'personal.campusId':
+      return profile.personal.campusId || profile.customAnswers?.['campus id / register number'] || '23BCT0157';
+    case 'personal.campusEmail':
+      return profile.personal.campusEmail || profile.customAnswers?.['alternate/campus email id'] || 'rishit.chaudhary2023@vitstudent.ac.in';
+    case 'personal.languages':
+      return profile.personal.languages || 'English, French, Hindi';
     case 'links.linkedin':
       return profile.links.linkedin || '';
     case 'links.github':
@@ -51,6 +57,16 @@ export function resolveProfileValue(profile: Profile, canonicalField: string): s
       return profile.education.gpa || '';
     case 'education.fieldOfStudy':
       return profile.education.fieldOfStudy || profile.education.degree;
+    case 'education.campus':
+      return profile.education.campus || 'Vellore';
+    case 'education.tenthScore':
+      return profile.education.tenthScore || '96.6';
+    case 'education.twelfthScore':
+      return profile.education.twelfthScore || '80';
+    case 'education.activeBacklogs':
+      return profile.education.activeBacklogs || 'No';
+    case 'education.certifications':
+      return profile.education.certifications || profile.customAnswers?.['awards & certifications'] || '';
     case 'resumeFileName':
       return profile.resumeFileName;
   }

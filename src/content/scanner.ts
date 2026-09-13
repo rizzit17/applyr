@@ -120,13 +120,13 @@ export function resolveLabelContext(el: HTMLElement, doc: Document | ShadowRoot)
 
     // 5. Preceding sibling or parent form-group header
     const container = el.closest(
-      '.form-group, .form-row, .field, .input-group, [data-automation-id], .jobs-easy-apply-form-section__grouping'
+      '.form-group, .form-row, .field, .input-group, [data-automation-id], .jobs-easy-apply-form-section__grouping, .Qr7Oae, [role="listitem"]'
     ) || el.parentElement;
 
     if (container) {
       // Look for headings, legends, or label-like elements in the container
       const headerEl = container.querySelector(
-        'label, legend, .label, [role="heading"], h3, h4, span.text-label, [data-automation-id*="label"]'
+        'label, legend, .label, [role="heading"], h3, h4, span.text-label, [data-automation-id*="label"], .M7eMe, .HoPnR'
       );
       if (headerEl && headerEl !== el && headerEl.textContent) {
         nearbyText = headerEl.textContent.trim();
@@ -155,6 +155,14 @@ export function resolveLabelContext(el: HTMLElement, doc: Document | ShadowRoot)
  */
 export function determineElementType(el: HTMLElement): ElementType {
   const tagName = el.tagName.toLowerCase();
+  const role = (el.getAttribute('role') || '').toLowerCase();
+
+  if (role === 'radio') return 'radio';
+  if (role === 'checkbox') return 'checkbox';
+  if (role === 'radiogroup') return 'radio';
+  if (role === 'listbox') return 'select';
+  if (role === 'combobox') return 'combobox';
+
   if (tagName === 'textarea') return 'textarea';
   if (tagName === 'select') return 'select';
 
@@ -167,7 +175,6 @@ export function determineElementType(el: HTMLElement): ElementType {
     return 'text';
   }
 
-  if (el.getAttribute('role') === 'combobox') return 'combobox';
   if (el.getAttribute('contenteditable') === 'true') return 'contenteditable';
 
   return 'unknown';
@@ -182,13 +189,16 @@ export function scanForm(root: Document | ShadowRoot = document): ScanResult {
   let hasCrossOriginIframes = false;
 
   try {
-    // Primary query selector for fillable candidates
+    // Primary query selector for fillable candidates (including Google Forms)
     const selector = [
       'input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="image"])',
       'textarea',
       'select',
       '[role="combobox"]',
       '[contenteditable="true"]',
+      'div[role="radiogroup"]',
+      'div[role="radio"]',
+      'div[role="checkbox"]',
     ].join(', ');
 
     const candidates = Array.from(root.querySelectorAll<HTMLElement>(selector));

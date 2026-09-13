@@ -73,15 +73,44 @@ export const KEYWORD_RULES: KeywordRule[] = [
     weight: 0.8,
   },
 
-  // Email
+  // Email (Personal)
   {
     canonicalField: 'personal.email',
     patterns: [
       /\be-?mail\b/i,
       /\be-?mail\s*address\b/i,
       /\bcontact\s*email\b/i,
+      /\bpersonal\s*email\b/i,
+      /\bregistered\s*email\b/i,
     ],
-    negativePatterns: [/\breferral\b/i, /\bmanager\b/i],
+    negativePatterns: [/\breferral\b/i, /\bmanager\b/i, /\bcampus\b/i, /\balternate\b/i, /\bcollege\b/i, /\buniversity\b/i],
+    weight: 0.9,
+  },
+
+  // Campus Email / Alternate Email
+  {
+    canonicalField: 'personal.campusEmail',
+    patterns: [
+      /\bcampus\s*email\b/i,
+      /\balternate.*email\b/i,
+      /\bvit.*email\b/i,
+      /\buniversity\s*email\b/i,
+      /\bcollege\s*email\b/i,
+    ],
+    weight: 0.95,
+  },
+
+  // Campus ID / Register Number
+  {
+    canonicalField: 'personal.campusId',
+    patterns: [
+      /\bcampus\s*id\b/i,
+      /\bregister\s*(number|no)?\b/i,
+      /\breg\s*no\b/i,
+      /\bregistration\s*(number|no)?\b/i,
+      /\broll\s*(number|no)?\b/i,
+      /\bstudent\s*id\b/i,
+    ],
     weight: 0.9,
   },
 
@@ -264,15 +293,88 @@ export const KEYWORD_RULES: KeywordRule[] = [
     weight: 0.85,
   },
 
-  // Education GPA / CGPA
+  // Education GPA / CGPA (College)
   {
     canonicalField: 'education.gpa',
     patterns: [
       /\bcgpa\b/i,
       /\bgpa\b/i,
       /\bgrade\s*point\b/i,
-      /\bpercentage\b/i,
-      /\bmarks\b/i,
+      /\bcurrent\s*marks\b/i,
+      /\bcurrent\s*(percentage|cgpa)\b/i,
+    ],
+    negativePatterns: [/\b10th\b/i, /\b12th\b/i, /\bx\s*board\b/i, /\bxii\s*board\b/i],
+    weight: 0.85,
+  },
+
+  // 10th Board Score
+  {
+    canonicalField: 'education.tenthScore',
+    patterns: [
+      /\b10th\b/i,
+      /\bx\s*board\b/i,
+      /\bsecondary\s*score\b/i,
+      /\bssc\b/i,
+      /\bmatriculation\b/i,
+    ],
+    weight: 0.9,
+  },
+
+  // 12th Board Score
+  {
+    canonicalField: 'education.twelfthScore',
+    patterns: [
+      /\b12th\b/i,
+      /\bxii\s*board\b/i,
+      /\bhigher\s*secondary\b/i,
+      /\bhsc\b/i,
+      /\bintermediate\b/i,
+    ],
+    weight: 0.9,
+  },
+
+  // Campus Location
+  {
+    canonicalField: 'education.campus',
+    patterns: [
+      /\bcampus\b/i,
+      /\bcollege\s*campus\b/i,
+    ],
+    negativePatterns: [/\bcampus\s*id\b/i, /\bcampus\s*email\b/i],
+    weight: 0.85,
+  },
+
+  // Active Backlogs
+  {
+    canonicalField: 'education.activeBacklogs',
+    patterns: [
+      /\bbacklogs?\b/i,
+      /\barrears?\b/i,
+      /\bstanding\s*arrears?\b/i,
+      /\bhistory\s*of\s*arrears?\b/i,
+    ],
+    weight: 0.9,
+  },
+
+  // Awards & Certifications
+  {
+    canonicalField: 'education.certifications',
+    patterns: [
+      /\bawards?\s*(&|and)?\s*certifications?\b/i,
+      /\bcertifications?\b/i,
+      /\bachievements?\b/i,
+      /\bhonors?\b/i,
+    ],
+    weight: 0.85,
+  },
+
+  // Foreign / Additional Languages Known
+  {
+    canonicalField: 'personal.languages',
+    patterns: [
+      /\bforeign\s*languages?\b/i,
+      /\blanguages?\s*known\b/i,
+      /\badditional\s*languages?\b/i,
     ],
     weight: 0.85,
   },
