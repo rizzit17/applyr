@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-container": "#2d6a4f", "surface-dim": "#dbd9dc", "surface-container-highest": "#e3e2e4", "on-surface-variant": "#404943", "on-primary-fixed-variant": "#0e5138", "tertiary-fixed-dim": "#ffb68e", "on-secondary-container": "#6f2000", "on-tertiary-fixed": "#331200", "secondary-fixed": "#ffdbcf", "secondary-fixed-dim": "#ffb59c", "surface-container-lowest": "#ffffff", "on-tertiary": "#ffffff", "outline-variant": "#bfc9c1", "surface": "#faf9fb", "surface-bright": "#faf9fb", "background": "#faf9fb", "on-surface": "#1b1c1e", "on-tertiary-container": "#ffd0b8", "inverse-on-surface": "#f2f0f3", "tertiary-container": "#9d4500", "on-secondary": "#ffffff", "primary": "#0f5238", "inverse-surface": "#2f3032", "on-secondary-fixed-variant": "#822801", "error": "#ba1a1a", "error-container": "#ffdad6", "primary-fixed-dim": "#95d4b3", "on-tertiary-fixed-variant": "#763300", "secondary": "#a23e18", "inverse-primary": "#95d4b3", "primary-fixed": "#b1f0ce", "tertiary-fixed": "#ffdbca", "surface-variant": "#e3e2e4", "surface-container": "#efedf0", "on-error-container": "#93000a", "surface-container-high": "#e9e8ea", "on-primary-container": "#a8e7c5", "on-error": "#ffffff", "on-primary-fixed": "#002114", "on-secondary-fixed": "#390c00", "outline": "#707973", "on-primary": "#ffffff", "surface-container-low": "#f5f3f5", "surface-tint": "#2c694e", "secondary-container": "#fe8357", "tertiary": "#783300", "on-background": "#1b1c1e" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "gutter-sm": "0.75rem", "margin": "1.25rem", "margin-sm": "0.75rem", "space-lg": "1.25rem", "space-md": "0.75rem", "space-xl": "1.75rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem" }, "fontFamily": { "headline-lg-mobile": [ "Newsreader" ], "code-sm": [ "JetBrains Mono" ], "label-sm": [ "Manrope" ], "headline-sm": [ "Newsreader" ], "body-lg": [ "Manrope" ], "headline-lg": [ "Newsreader" ], "headline-md": [ "Newsreader" ], "body-sm": [ "Manrope" ], "label-md": [ "Manrope" ], "body-md": [ "Manrope" ] }, "fontSize": { "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "code-sm": [ "11px", { "lineHeight": "16px", "letterSpacing": "0", "fontWeight": "500" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-sm": [ "18px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-lg": [ "15px", { "lineHeight": "24px", "fontWeight": "400" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "500" } ], "headline-md": [ "22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-md": [ "13px", { "lineHeight": "20px", "fontWeight": "400" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low border-r border-outline-variant z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="p-margin border-b border-outline-variant"><div class="flex items-center gap-space-xs"><span class="font-headline-md text-headline-md font-semibold tracking-tight text-on-surface">Applyr</span><span class="h-2 w-2 rounded-full bg-primary inline-block"></span></div><div class="mt-space-xs font-code-sm text-code-sm text-on-surface-variant tracking-normal">v1.4.2 · Local-First Dossier</div></div><nav class="flex flex-col gap-space-xs px-space-sm pt-space-md" data-active-classes="bg-surface-container-highest text-on-surface font-semibold border-l-2 border-primary"><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="profiles" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">folder_shared</span><span class="font-label-md text-label-md">Profiles</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">3 active</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-highest text-on-surface font-semibold border-l-2 border-primary" data-path="site-mappings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">tab_unselected</span><span class="font-label-md text-label-md">Site Mappings</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">0 cached</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">tune</span><span class="font-label-md text-label-md">Settings</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">AI/Rules</span></a></nav></div><div class="p-space-md m-space-sm rounded border border-outline-variant bg-surface-container-lowest flex flex-col gap-space-sm"><div class="flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[16px]">database</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface">Local SQLite</span></div><span class="font-code-sm text-code-sm text-on-surface-variant font-medium">42.8 KB</span></div><div class="h-1 w-full bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width: 14%"></div></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant"><div class="flex items-center gap-space-xs text-primary"><span class="material-symbols-outlined text-[14px]">lock</span><span class="font-code-sm text-code-sm font-medium">0 Cloud Egress</span></div><kbd class="font-code-sm text-code-sm text-on-surface-variant border border-outline-variant rounded px-1">⌘K</kbd></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">description</span><span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Applyr</span><span class="text-outline-variant">/</span><span class="font-label-md text-label-md text-on-surface font-semibold">Local Dashboard</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-md py-1 rounded bg-primary-fixed border border-primary-fixed-dim"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span><span class="font-code-sm text-code-sm text-on-primary-fixed-variant font-semibold">Local SQLite Active · 0kb Cloud Egress</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Subtle Architectural Grain & Accent Layer -->
+<div class="p-margin flex flex-col gap-space-xl max-w-7xl mx-auto w-full">
+<!-- Top Breadcrumb & Editorial Header Cluster -->
+<div class="flex flex-col gap-space-sm pt-space-xs">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<span class="text-primary font-bold">Options Engine</span>
+<span class="text-outline-variant">/</span>
+<span class="hover:text-on-surface transition-colors cursor-pointer">Dashboard</span>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface font-semibold">Learned Signatures</span>
+</div>
+<div class="flex flex-wrap items-baseline justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            Learned Site Mappings
+          </h1>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-code-sm text-code-sm uppercase tracking-wider shadow-sm">
+            0 Hostnames
+          </span>
+</div>
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<span class="h-1.5 w-1.5 rounded-full bg-primary-container"></span>
+<span>Schema rev: <strong class="text-on-surface font-medium">site_overrides_v2</strong></span>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
+        Per-hostname field signatures learned automatically from your manual form corrections. Completely zero-cloud egress, stored directly inside local IndexedDB/SQLite.
+      </p>
+</div>
+<!-- Top Action Toolbar Bar -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+<!-- Search Input -->
+<div class="relative flex-1 group">
+<div class="absolute inset-y-0 left-0 pl-space-md flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</div>
+<input class="w-full pl-10 pr-space-md py-2.5 bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/70 font-body-md text-body-md rounded-lg focus:outline-none focus:bg-surface-container-lowest transition-all" placeholder="Search hostnames (e.g. greenhouse.io, workday.com, lever.co)..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-space-md flex items-center pointer-events-none">
+<kbd class="font-code-sm text-code-sm text-on-surface-variant bg-surface-container px-1.5 py-0.5 rounded">Ctrl+F</kbd>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-space-sm self-end md:self-auto">
+<button class="flex items-center gap-space-xs px-space-md py-2 bg-surface-container-high hover:bg-surface-dim text-on-surface font-label-md text-label-md rounded-lg transition-colors shadow-sm active:scale-95" onclick="triggerExportToast()" type="button">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">download</span>
+<span>Export JSON</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 bg-surface-container-low hover:bg-error-container text-secondary hover:text-on-error-container font-label-md text-label-md rounded-lg transition-colors shadow-sm active:scale-95" onclick="confirmClearCache()" type="button">
+<span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+<span>Clear Entire Cache</span>
+</button>
+</div>
+</div>
+<!-- Status Banner: Empty State Assurance -->
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md relative overflow-hidden">
+<div class="flex items-center gap-space-md z-10">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-fixed text-[20px]">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-headline-sm text-headline-sm text-on-surface">No site mappings recorded yet</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container font-code-sm text-code-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container animate-pulse"></span>
+              Local Listener Active
+            </span>
+</div>
+<p class="font-code-sm text-code-sm text-on-surface-variant mt-1">
+            Engine initialized · SQLite table <code class="text-primary font-semibold bg-surface-container-highest px-1 py-0.5 rounded">site_overrides_v2</code> is clean · Zero overrides cached
+          </p>
+</div>
+</div>
+<div class="hidden lg:flex flex-col items-end text-right z-10 shrink-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Memory Footprint</span>
+<span class="font-code-sm text-code-sm text-on-surface font-semibold">0.00 KB cached</span>
+</div>
+</div>
+<!-- Autonomous Cache Pipeline Blueprint (Visual 3-Stage Architectural Diagram) -->
+<div class="flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-space-xs">
+<div>
+<div class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">Heuristic Architecture</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Autonomous Learning Lifecycle</h2>
+</div>
+<div class="font-code-sm text-code-sm text-on-surface-variant flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[15px] text-primary">verified_user</span>
+<span>Zero cloud egress · Local evaluation only</span>
+</div>
+</div>
+<!-- Schematic Canvas / Plate -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-lg relative">
+<!-- Technical Grid Background Decor -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg relative">
+<!-- STAGE 01 -->
+<div class="flex flex-col bg-surface-container-low rounded-lg p-space-md shadow-sm transition-transform hover:-translate-y-0.5 duration-200">
+<div class="flex items-center justify-between pb-space-sm">
+<span class="font-code-sm text-code-sm text-primary font-semibold tracking-wider">STAGE 01</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">input</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">Job Application Form</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              Autofill scans greenhouse.io, lever.co, workday.com, or custom corporate portals during page paint.
+            </p>
+<!-- Code snippet -->
+<div class="mt-auto bg-surface-container-highest p-space-sm rounded font-code-sm text-code-sm flex flex-col gap-1 text-on-surface">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>DOM INSPECTION</span>
+<span class="text-primary-container">MATCH FOUND</span>
+</div>
+<div class="truncate text-on-surface font-mono">
+<span class="text-outline">INPUT_FIRSTNAME:</span> 'Alex Rivera'
+              </div>
+<div class="truncate text-secondary font-mono">
+<span class="text-outline">SELECT_EEO_RACE:</span> UNKNOWN_TAG
+              </div>
+<div class="text-on-surface-variant/70 italic text-[10px] pt-1">
+                ↳ &lt;select name="job_application[eeo_race]"&gt;
+              </div>
+</div>
+</div>
+<!-- STAGE 02 -->
+<div class="flex flex-col bg-surface-container-low rounded-lg p-space-md shadow-sm transition-transform hover:-translate-y-0.5 duration-200 relative">
+<div class="flex items-center justify-between pb-space-sm">
+<span class="font-code-sm text-code-sm text-secondary font-semibold tracking-wider">STAGE 02</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">touch_app</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">Manual Correction</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              You manually adjust or complete an unmapped select menu, radio cluster, or custom web component input.
+            </p>
+<!-- Change Intercepted Callout -->
+<div class="mt-auto bg-surface-container-highest p-space-sm rounded font-code-sm text-code-sm flex flex-col gap-1 text-on-surface">
+<div class="flex items-center justify-between text-secondary">
+<span class="font-bold">MUTATION INTERCEPTED</span>
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+</div>
+<div class="truncate text-on-surface font-mono">
+<span class="text-outline">target:</span> #job_application_eeo
+              </div>
+<div class="truncate text-on-secondary-container font-mono bg-secondary-fixed/50 px-1 rounded">
+<span class="text-outline">value:</span> "Decline to Self-Identify"
+              </div>
+<div class="truncate text-on-surface font-mono">
+<span class="text-outline">event:</span> MutationObserver.INPUT
+              </div>
+</div>
+</div>
+<!-- STAGE 03 -->
+<div class="flex flex-col bg-surface-container-low rounded-lg p-space-md shadow-sm transition-transform hover:-translate-y-0.5 duration-200">
+<div class="flex items-center justify-between pb-space-sm">
+<span class="font-code-sm text-code-sm text-primary font-semibold tracking-wider">STAGE 03</span>
+<span class="material-symbols-outlined text-primary text-[18px]">terminal</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">Local SQLite Signature</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              Applyr compiles the selector, tree hierarchy, and profile dossier key directly into local storage.
+            </p>
+<!-- SQLite signature snippet -->
+<div class="mt-auto bg-surface-container-highest p-space-sm rounded font-code-sm text-code-sm flex flex-col gap-1 text-on-surface">
+<div class="flex items-center justify-between text-primary">
+<span>HASH: 0x4B2E8F</span>
+<span class="font-bold">0.2ms WRITE</span>
+</div>
+<div class="truncate text-on-surface font-mono">
+<span class="text-outline">domain:</span> "boards.greenhouse.io"
+              </div>
+<div class="truncate text-primary font-mono">
+<span class="text-outline">rule:</span> "eeo_gender -&gt; profile.gender"
+              </div>
+<div class="flex items-center justify-between pt-1">
+<span class="text-outline-variant font-mono">confidence: 100%</span>
+<span class="text-on-primary-fixed-variant bg-primary-fixed px-1 rounded text-[10px]">LOCAL USER</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Architectural Pipeline Vector Schematic Line -->
+<div class="p-space-sm bg-surface-container rounded-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm font-code-sm text-code-sm text-on-surface-variant">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="material-symbols-outlined text-[16px] text-primary">schema</span>
+<span class="text-on-surface font-medium">PIPELINE FLOW:</span>
+<span class="bg-surface-container-highest px-2 py-0.5 rounded text-on-surface">[DOM Mutation]</span>
+<span>→</span>
+<span class="bg-surface-container-highest px-2 py-0.5 rounded text-on-surface">[Heuristic Extraction]</span>
+<span>→</span>
+<span class="bg-surface-container-highest px-2 py-0.5 rounded text-on-surface">[IndexedDB / SQLite Commit]</span>
+</div>
+<div class="flex items-center gap-1 text-primary shrink-0">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span class="font-semibold">Local Storage Only</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Two-Column Editorial & Interactive Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Editorial Commentary / Archival Ledger Note -->
+<div class="lg:col-span-7 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">auto_stories</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">The Editorial Guarantee</h2>
+</div>
+<div class="font-body-lg text-body-lg text-on-surface space-y-space-sm leading-relaxed">
+<p>
+            Applyr operates silently in the background. The moment you fill an application form and correct an unmapped field, its unique DOM fingerprint is cached here. On subsequent visits to that ATS, Applyr recalls your exact selection automatically without cloud dependencies.
+          </p>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Because modern applicant tracking systems frequently update field attributes, classes, and react component keys, Applyr’s multi-pass selector engine pairs CSS paths with localized string matching heuristics. This guarantees maximum resilience across company-specific permutations.
+          </p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-space-md pt-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col">
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase">Egress Vector</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">0.0%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pure local bus</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col">
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase">Lookup Speed</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">&lt; 1.2ms</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Direct indexed key</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col">
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase">Built-in Defaults</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">42 Signatures</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Hardened rules</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Action Card -->
+<div class="lg:col-span-5 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between gap-space-lg">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Diagnostics &amp; Verification</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">science</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">
+            Test or Inspect Engine Knowledge
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Verify autofill rules and field heuristics safely inside an isolated local iframe without submitting real job forms or exposing career telemetry.
+          </p>
+</div>
+<!-- Built-in Defaults Preview Snippet -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-xs font-code-sm text-code-sm">
+<div class="flex items-center justify-between text-on-surface font-medium pb-1">
+<span>DEFAULT SEED STATUS</span>
+<span class="text-primary">IMMUTABLE BUNDLE</span>
+</div>
+<div class="text-on-surface-variant flex justify-between">
+<span>Greenhouse (Core ATS)</span>
+<span class="text-on-surface">14 fields registered</span>
+</div>
+<div class="text-on-surface-variant flex justify-between">
+<span>Workday Human Capital</span>
+<span class="text-on-surface">18 fields registered</span>
+</div>
+<div class="text-on-surface-variant flex justify-between">
+<span>Lever Candidate Portal</span>
+<span class="text-on-surface">10 fields registered</span>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-space-sm pt-space-xs">
+<button class="flex-1 px-space-md py-2.5 bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-space-xs shadow-sm transition-colors active:scale-95" onclick="openSandboxModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">lab_profile</span>
+<span>Open Field Tester Sandbox</span>
+</button>
+<button class="px-space-md py-2.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-space-xs transition-colors shadow-sm" id="toggleBuiltInsBtn" onclick="toggleBuiltIns()" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>View 42 Built-ins</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Expandable Built-in Signatures Sheet (Hidden by default) -->
+<div class="hidden bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex-col gap-space-md" id="builtInsDrawer">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">database</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">42 Built-in System Signatures</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface text-[18px] p-1" onclick="toggleBuiltIns()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        These standard heuristic selectors ship statically with Applyr extension binaries and provide immediate baseline matching across high-frequency ATS engines.
+      </p>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-sm pt-space-xs">
+<div class="p-space-sm bg-surface-container-low rounded font-code-sm text-code-sm flex flex-col gap-1">
+<div class="flex justify-between text-primary font-bold">
+<span>GH_LEGAL_FIRSTNAME</span>
+<span>Greenhouse</span>
+</div>
+<span class="text-on-surface-variant truncate">input[id*="first_name"], #first_name</span>
+<span class="text-[10px] text-outline">Target: profile.basics.firstName</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded font-code-sm text-code-sm flex flex-col gap-1">
+<div class="flex justify-between text-primary font-bold">
+<span>GH_LEGAL_LASTNAME</span>
+<span>Greenhouse</span>
+</div>
+<span class="text-on-surface-variant truncate">input[id*="last_name"], #last_name</span>
+<span class="text-[10px] text-outline">Target: profile.basics.lastName</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded font-code-sm text-code-sm flex flex-col gap-1">
+<div class="flex justify-between text-primary font-bold">
+<span>WD_EMAIL_ADDR</span>
+<span>Workday</span>
+</div>
+<span class="text-on-surface-variant truncate">input[data-automation-id="email"]</span>
+<span class="text-[10px] text-outline">Target: profile.basics.email</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded font-code-sm text-code-sm flex flex-col gap-1">
+<div class="flex justify-between text-primary font-bold">
+<span>WD_PHONE_NUMBER</span>
+<span>Workday</span>
+</div>
+<span class="text-on-surface-variant truncate">input[data-automation-id="phone-number"]</span>
+<span class="text-[10px] text-outline">Target: profile.basics.phone</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded font-code-sm text-code-sm flex flex-col gap-1">
+<div class="flex justify-between text-primary font-bold">
+<span>LV_RESUME_UPLOAD</span>
+<span>Lever</span>
+</div>
+<span class="text-on-surface-variant truncate">input[name="resume"][type="file"]</span>
+<span class="text-[10px] text-outline">Target: profile.documents.primaryResume</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded font-code-sm text-code-sm flex flex-col gap-1">
+<div class="flex justify-between text-primary font-bold">
+<span>LV_LINKEDIN_URL</span>
+<span>Lever</span>
+</div>
+<span class="text-on-surface-variant truncate">input[name*="urls[LinkedIn]"]</span>
+<span class="text-[10px] text-outline">Target: profile.socials.linkedIn</span>
+</div>
+</div>
+</div>
+<!-- Notification Toast (Ephemeral Micro-interaction) -->
+<div class="fixed bottom-6 right-6 bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-lg shadow-xl flex items-center gap-space-sm transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50" id="toastNotification">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]" id="toastIcon">check_circle</span>
+<span class="font-body-md text-body-md" id="toastMessage">Cached mappings exported successfully.</span>
+</div>
+</div>
+</div>
+<script>
+  function showToast(message, icon = 'check_circle') {
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
+    
+    toastMsg.textContent = message;
+    toastIcon.textContent = icon;
+    
+    toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+    
+    setTimeout(() => {
+      toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 3200);
+  }
+
+  function triggerExportToast() {
+    showToast('Exported empty dossier: site_overrides_v2.json (0 records)');
+  }
+
+  function confirmClearCache() {
+    if (confirm('Verify: Reset local cache table `site_overrides_v2`? (No hostnames to clear)')) {
+      showToast('Cache is already pristine. 0 keys flushed.', 'info');
+    }
+  }
+
+  function toggleBuiltIns() {
+    const drawer = document.getElementById('builtInsDrawer');
+    const btn = document.getElementById('toggleBuiltInsBtn');
+    if (drawer.classList.contains('hidden')) {
+      drawer.classList.remove('hidden');
+      drawer.classList.add('flex');
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">visibility_off</span><span>Hide Built-ins</span>';
+    } else {
+      drawer.classList.add('hidden');
+      drawer.classList.remove('flex');
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">visibility</span><span>View 42 Built-ins</span>';
+    }
+  }
+
+  function openSandboxModal() {
+    showToast('Launching offline sandbox simulator in isolated worker thread...', 'science');
+  }
+</script></main></div></body></html>

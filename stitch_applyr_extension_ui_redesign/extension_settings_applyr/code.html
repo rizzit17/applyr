@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-container": "#2d6a4f", "surface-dim": "#dbd9dc", "surface-container-highest": "#e3e2e4", "on-surface-variant": "#404943", "on-primary-fixed-variant": "#0e5138", "tertiary-fixed-dim": "#ffb68e", "on-secondary-container": "#6f2000", "on-tertiary-fixed": "#331200", "secondary-fixed": "#ffdbcf", "secondary-fixed-dim": "#ffb59c", "surface-container-lowest": "#ffffff", "on-tertiary": "#ffffff", "outline-variant": "#bfc9c1", "surface": "#faf9fb", "surface-bright": "#faf9fb", "background": "#faf9fb", "on-surface": "#1b1c1e", "on-tertiary-container": "#ffd0b8", "inverse-on-surface": "#f2f0f3", "tertiary-container": "#9d4500", "on-secondary": "#ffffff", "primary": "#0f5238", "inverse-surface": "#2f3032", "on-secondary-fixed-variant": "#822801", "error": "#ba1a1a", "error-container": "#ffdad6", "primary-fixed-dim": "#95d4b3", "on-tertiary-fixed-variant": "#763300", "secondary": "#a23e18", "inverse-primary": "#95d4b3", "primary-fixed": "#b1f0ce", "tertiary-fixed": "#ffdbca", "surface-variant": "#e3e2e4", "surface-container": "#efedf0", "on-error-container": "#93000a", "surface-container-high": "#e9e8ea", "on-primary-container": "#a8e7c5", "on-error": "#ffffff", "on-primary-fixed": "#002114", "on-secondary-fixed": "#390c00", "outline": "#707973", "on-primary": "#ffffff", "surface-container-low": "#f5f3f5", "surface-tint": "#2c694e", "secondary-container": "#fe8357", "tertiary": "#783300", "on-background": "#1b1c1e" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "gutter-sm": "0.75rem", "margin": "1.25rem", "margin-sm": "0.75rem", "space-lg": "1.25rem", "space-md": "0.75rem", "space-xl": "1.75rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem" }, "fontFamily": { "headline-lg-mobile": [ "Newsreader" ], "code-sm": [ "JetBrains Mono" ], "label-sm": [ "Manrope" ], "headline-sm": [ "Newsreader" ], "body-lg": [ "Manrope" ], "headline-lg": [ "Newsreader" ], "headline-md": [ "Newsreader" ], "body-sm": [ "Manrope" ], "label-md": [ "Manrope" ], "body-md": [ "Manrope" ] }, "fontSize": { "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "code-sm": [ "11px", { "lineHeight": "16px", "letterSpacing": "0", "fontWeight": "500" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-sm": [ "18px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-lg": [ "15px", { "lineHeight": "24px", "fontWeight": "400" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "500" } ], "headline-md": [ "22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-md": [ "13px", { "lineHeight": "20px", "fontWeight": "400" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low border-r border-outline-variant z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="p-margin border-b border-outline-variant"><div class="flex items-center gap-space-xs"><span class="font-headline-md text-headline-md font-semibold tracking-tight text-on-surface">Applyr</span><span class="h-2 w-2 rounded-full bg-primary inline-block"></span></div><div class="mt-space-xs font-code-sm text-code-sm text-on-surface-variant tracking-normal">v1.4.2 · Local-First Dossier</div></div><nav class="flex flex-col gap-space-xs px-space-sm pt-space-md" data-active-classes="bg-surface-container-highest text-on-surface font-semibold border-l-2 border-primary"><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="profiles" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">folder_shared</span><span class="font-label-md text-label-md">Profiles</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">3 active</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="site-mappings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">tab_unselected</span><span class="font-label-md text-label-md">Site Mappings</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">0 cached</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-highest text-on-surface font-semibold border-l-2 border-primary" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">tune</span><span class="font-label-md text-label-md">Settings</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">AI/Rules</span></a></nav></div><div class="p-space-md m-space-sm rounded border border-outline-variant bg-surface-container-lowest flex flex-col gap-space-sm"><div class="flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[16px]">database</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface">Local SQLite</span></div><span class="font-code-sm text-code-sm text-on-surface-variant font-medium">42.8 KB</span></div><div class="h-1 w-full bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width: 14%"></div></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant"><div class="flex items-center gap-space-xs text-primary"><span class="material-symbols-outlined text-[14px]">lock</span><span class="font-code-sm text-code-sm font-medium">0 Cloud Egress</span></div><kbd class="font-code-sm text-code-sm text-on-surface-variant border border-outline-variant rounded px-1">⌘K</kbd></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">description</span><span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Applyr</span><span class="text-outline-variant">/</span><span class="font-label-md text-label-md text-on-surface font-semibold">Local Dashboard</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-md py-1 rounded bg-primary-fixed border border-primary-fixed-dim"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span><span class="font-code-sm text-code-sm text-on-primary-fixed-variant font-semibold">Local SQLite Active · 0kb Cloud Egress</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="max-w-7xl mx-auto w-full px-margin py-space-xl">
+<!-- Top Action & Editorial Title Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between pb-space-lg gap-space-md">
+<div class="space-y-space-xs max-w-2xl">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="font-code-sm text-code-sm uppercase tracking-wider text-secondary">Engine Config</span>
+<span class="text-surface-variant font-code-sm">/</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant font-medium">applyr.config.json</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-code-sm text-code-sm">v1.4.2 spec</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">Extension Settings</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Confidence thresholds, heuristic classification weights, and zero-knowledge privacy fallbacks for in-browser DOM parsing.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-end">
+<button class="px-space-md py-space-sm bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded shadow-sm hover:bg-surface-container transition-colors flex items-center gap-space-xs" id="revertBtn" type="button">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">history</span>
+<span>Revert Defaults</span>
+</button>
+<button class="px-space-md py-space-sm bg-primary text-on-primary font-label-md text-label-md rounded shadow-sm hover:bg-primary-container transition-colors flex items-center gap-space-xs" id="saveBtn" type="button">
+<span class="material-symbols-outlined text-[16px]">save</span>
+<span>Save Settings</span>
+<kbd class="ml-1 px-1 py-0.5 text-code-sm bg-primary-container text-on-primary-container rounded">⌘S</kbd>
+</button>
+</div>
+</div>
+<!-- Main Two-Column Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- LEFT COLUMN: Primary Controls (Cards 01, 02, 03) -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<!-- Card 01: Classification Threshold -->
+<section class="bg-surface-container-lowest rounded shadow-sm p-space-lg relative overflow-hidden">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-secondary font-semibold">01</span>
+<span class="text-surface-variant">/</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Classification Threshold</h2>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+            Fields with heuristic matching confidence below this threshold remain empty in the DOM and trigger an amber ledger prompt for single-click operator validation.
+          </p>
+<!-- Dynamic Readout -->
+<div class="mt-space-lg p-space-md bg-surface rounded flex items-baseline justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Active Gate Cutoff</span>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight" id="sliderValueDisplay">60%</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">heuristic weight</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-code-sm text-code-sm font-semibold" id="thresholdBadge">
+<span class="w-2 h-2 rounded-full bg-secondary inline-block animate-ping"></span>
+<span>AMBER: REVIEW PROMPTED</span>
+</div>
+</div>
+<!-- Tactile Range Slider -->
+<div class="mt-space-lg">
+<div class="relative py-space-sm">
+<input class="w-full h-2 bg-surface-container-high rounded-full appearance-none cursor-pointer accent-primary focus:outline-none" id="thresholdSlider" max="100" min="0" step="5" type="range" value="60"/>
+</div>
+<!-- Tick Labels -->
+<div class="grid grid-cols-4 pt-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<div>
+<span class="font-semibold text-on-surface block">0%</span>
+<span class="text-[10px] text-on-surface-variant">Aggressive</span>
+</div>
+<div class="text-center">
+<span class="font-semibold text-primary block">60%</span>
+<span class="text-[10px] text-primary">Default Heuristic</span>
+</div>
+<div class="text-center">
+<span class="font-semibold text-on-surface block">80%</span>
+<span class="text-[10px] text-on-surface-variant">High Certainty</span>
+</div>
+<div class="text-right">
+<span class="font-semibold text-on-surface block">100%</span>
+<span class="text-[10px] text-on-surface-variant">Strict Canonical</span>
+</div>
+</div>
+</div>
+<!-- In-DOM Highlighting Preview -->
+<div class="mt-space-lg pt-space-md bg-surface-container-low rounded p-space-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block mb-space-sm">Live DOM Annotation Preview</span>
+<div class="space-y-space-xs">
+<!-- High Certainty Specimen -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest rounded">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<div>
+<span class="font-code-sm text-code-sm font-semibold text-on-surface">applicant_name</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Auto-filled with 100% certainty</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant font-code-sm text-code-sm">&gt;= 80% High</span>
+</div>
+<!-- Review Specimen -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest rounded">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">warning</span>
+<div>
+<span class="font-code-sm text-code-sm font-semibold text-on-surface">years_experience</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Auto-filled, flagged for 1-click check</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-code-sm text-code-sm">60% – 79% Review</span>
+</div>
+<!-- Unmapped Specimen -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest rounded">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline text-[18px]">indeterminate_check_box</span>
+<div>
+<span class="font-code-sm text-code-sm text-on-surface-variant line-through">[empty field: custom_diversity_q]</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Left blank for manual operator typing</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-variant text-on-surface-variant font-code-sm text-code-sm">&lt; 60% Unmapped</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Card 02: Optional AI Fallback -->
+<section class="bg-surface-container-lowest rounded shadow-sm p-space-lg">
+<div class="flex items-start justify-between">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-secondary font-semibold">02</span>
+<span class="text-surface-variant">/</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">AI Fallback for Unmapped Fields</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                When static heuristics fall below cutoff, invoke localized LLM semantic inspection to resolve dynamic Workday, Greenhouse, and Lever wrappers.
+              </p>
+</div>
+<!-- Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer select-none">
+<input class="sr-only peer" id="aiToggle" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Archival Callout Box: Zero-Knowledge Privacy -->
+<div class="mt-space-lg p-space-md bg-secondary-fixed/40 rounded">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">verified_user</span>
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-xs">
+<h3 class="font-label-md text-label-md font-bold text-on-secondary-fixed">Zero-Knowledge Privacy &amp; Metadata Disclosure</h3>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest text-secondary font-code-sm text-code-sm">Manifest V3 Strict</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface leading-relaxed">
+                  Enabling AI fallback sends <span class="font-semibold">ONLY DOM structural tokens</span> (<code class="bg-surface-container-lowest px-1 py-0.5 rounded font-code-sm text-code-sm">aria-label</code>, input name, parent labels) to clarify ambiguity. Your actual profile records (full name, phone, addresses, SSN, past salaries) are <span class="font-semibold text-secondary">NEVER transmitted over the network</span>. All classification resolves into an ID index before filling locally.
+                </p>
+</div>
+</div>
+</div>
+<!-- Provider Selector -->
+<div class="mt-space-lg space-y-space-sm" id="providerSection">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Inference Execution Engine</span>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+<!-- Local WebLLM Option -->
+<label class="flex flex-col justify-between p-space-md rounded bg-surface cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-xs">
+<input checked="" class="text-primary focus:ring-0 accent-primary" name="ai_provider" type="radio" value="webllm"/>
+<span class="font-label-md text-label-md font-bold text-on-surface">Local WebLLM</span>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-code-sm text-code-sm">0kb Egress</span>
+</div>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant">
+                  Runs directly on in-browser WebGPU via smol-models. Zero external latency, fully isolated from any remote endpoint.
+                </p>
+</label>
+<!-- BYOK Cloud Option -->
+<label class="flex flex-col justify-between p-space-md rounded bg-surface cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-xs">
+<input class="text-primary focus:ring-0 accent-primary" name="ai_provider" type="radio" value="byok"/>
+<span class="font-label-md text-label-md font-bold text-on-surface">BYOK Direct HTTPS</span>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-sm text-code-sm">Haiku / 4o-mini</span>
+</div>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant">
+                  Bring Your Own Key for direct encrypted calls to Anthropic Claude 3.5 Haiku or OpenAI GPT-4o-mini.
+                </p>
+</label>
+</div>
+</div>
+</section>
+<!-- Card 03: Storage, Snapshots & Engine Signatures -->
+<section class="bg-surface-container-lowest rounded shadow-sm p-space-lg">
+<div class="flex items-center gap-space-xs pb-space-sm">
+<span class="font-code-sm text-code-sm text-secondary font-semibold">03</span>
+<span class="text-surface-variant">/</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Local Storage &amp; Signatures</h2>
+</div>
+<div class="divide-y divide-surface-container-high space-y-space-md mt-space-sm">
+<!-- Action 1: Wipe -->
+<div class="pt-space-md first:pt-0 flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="max-w-md">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Purge SQLite Ledger</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Permanently wipe all applicant profiles, cached DOM selectors, and heuristic logs from local extension storage.</p>
+</div>
+<button class="px-space-md py-space-sm bg-surface-container-high hover:bg-error/10 text-error font-label-md text-label-md rounded transition-colors self-start sm:self-auto flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[16px]">delete_forever</span>
+<span>Wipe Local SQLite</span>
+</button>
+</div>
+<!-- Action 2: Export Dump -->
+<div class="pt-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="max-w-md">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Encrypted Data Specimen</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Export schema rules, classification stats, and local profile definitions as a portable AES-GCM archive.</p>
+</div>
+<button class="px-space-md py-space-sm bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md rounded transition-colors self-start sm:self-auto flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[16px]">archive</span>
+<span>Generate SQLite Dump</span>
+</button>
+</div>
+<!-- Action 3: Sync Signatures -->
+<div class="pt-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="max-w-md">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">ATS Heuristic Signatures</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Synchronize pattern definitions for Greenhouse, Lever, Workday, Taleo, and Ashby without restarting Chrome.</p>
+</div>
+<button class="px-space-md py-space-sm bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md rounded transition-colors self-start sm:self-auto flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+<span>Check Signatures</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- RIGHT COLUMN: Archival Specimen & Distribution Diagnostics -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+<!-- Specimen 01: Archival Monospace Code Inspector -->
+<div class="bg-surface-container-lowest rounded shadow-sm p-space-lg relative flex flex-col">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">terminal</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Active Engine Schema</h2>
+</div>
+<span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant">specimen #0412</span>
+</div>
+<!-- Monospace Ledger Block -->
+<div class="bg-surface p-space-md rounded font-code-sm text-code-sm leading-relaxed overflow-x-auto text-on-surface">
+<div class="text-on-surface-variant select-none pb-space-xs">// Manifest V3 Local-First Heuristic Spec</div>
+<div class="space-y-0.5">
+<div><span class="text-secondary font-semibold">"engine_version"</span>: <span class="text-primary font-semibold">"1.4.2"</span>,</div>
+<div><span class="text-secondary font-semibold">"confidence_cutoff"</span>: <span class="text-primary font-semibold" id="codeCutoff">0.60</span>,</div>
+<div><span class="text-secondary font-semibold">"ai_fallback"</span>: {</div>
+<div class="pl-4"><span class="text-secondary">"enabled"</span>: <span class="text-outline font-semibold" id="codeAiEnabled">false</span>,</div>
+<div class="pl-4"><span class="text-secondary">"provider"</span>: <span class="text-on-surface font-semibold">"webllm_gpu"</span>,</div>
+<div class="pl-4"><span class="text-secondary">"pii_scrubbed"</span>: <span class="text-primary font-semibold">true</span></div>
+<div>},</div>
+<div><span class="text-secondary font-semibold">"sqlite_integrity"</span>: <span class="text-primary font-semibold">"OK"</span>,</div>
+<div><span class="text-secondary font-semibold">"rules_cached"</span>: <span class="text-primary font-semibold">412</span>,</div>
+<div><span class="text-secondary font-semibold">"egress_allowed"</span>: <span class="text-primary font-semibold">0</span></div>
+</div>
+</div>
+<!-- Metadata Specimen Details -->
+<div class="grid grid-cols-2 gap-space-sm mt-space-md pt-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Runtime Latency</span>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">1.2ms</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">(Local RAM)</span>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Observer Status</span>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+<span class="font-code-sm text-code-sm font-semibold text-primary">DOM Active</span>
+</div>
+</div>
+</div>
+<!-- Hash Footer -->
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>Cache Hash</span>
+<span class="font-mono text-on-surface font-medium">sha256:7f8a9e...4b12c</span>
+</div>
+</div>
+<!-- Specimen 02: Classification Distribution -->
+<div class="bg-surface-container-lowest rounded shadow-sm p-space-lg flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">analytics</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Field Classification Ratio</h2>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Last 1,280 DOM nodes</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              Observed accuracy distribution across standard Greenhouse and Workday application suites over the past 30 days.
+            </p>
+<!-- Stacked Proportion Bar -->
+<div class="mt-space-lg">
+<div class="h-4 w-full bg-surface-container-high rounded-full overflow-hidden flex">
+<div class="h-full bg-primary" style="width: 82%" title="High Certainty (82%)"></div>
+<div class="h-full bg-secondary-container" style="width: 14%" title="Needs Review (14%)"></div>
+<div class="h-full bg-outline" style="width: 4%" title="Unmapped (4%)"></div>
+</div>
+<!-- Distribution Key -->
+<div class="grid grid-cols-3 gap-space-xs mt-space-md pt-space-xs text-center font-code-sm text-code-sm">
+<div class="p-space-xs bg-surface-container-low rounded">
+<div class="flex items-center justify-center gap-1 text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>82%</span>
+</div>
+<span class="text-on-surface-variant text-[10px] block mt-0.5">&gt;= 80% Auto</span>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded">
+<div class="flex items-center justify-center gap-1 text-secondary font-bold">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span>14%</span>
+</div>
+<span class="text-on-surface-variant text-[10px] block mt-0.5">60-79% Review</span>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded">
+<div class="flex items-center justify-center gap-1 text-on-surface-variant font-bold">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>4%</span>
+</div>
+<span class="text-on-surface-variant text-[10px] block mt-0.5">&lt; 60% Blank</span>
+</div>
+</div>
+</div>
+<!-- Ledger Annotation Callout -->
+<div class="mt-space-lg p-space-md bg-surface rounded flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">lightbulb</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<span class="font-semibold text-primary">96% of detected form inputs</span> pass your active 60% confidence baseline automatically without requiring manual selector rules.
+              </p>
+</div>
+</div>
+<!-- Bottom Action: DOM Inspector Shortcut -->
+<div class="mt-space-lg pt-space-md">
+<button class="w-full py-space-sm px-space-md bg-surface-container hover:bg-surface-container-high rounded text-on-surface font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Launch Live DOM Heuristic Overlay</span>
+<kbd class="ml-1 px-1 py-0.5 text-code-sm bg-surface-container-highest text-on-surface-variant rounded">⌥D</kbd>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Tactile slider synchronization with live display & code specimen
+  const slider = document.getElementById('thresholdSlider');
+  const display = document.getElementById('sliderValueDisplay');
+  const codeCutoff = document.getElementById('codeCutoff');
+  const badge = document.getElementById('thresholdBadge');
+  const aiToggle = document.getElementById('aiToggle');
+  const codeAiEnabled = document.getElementById('codeAiEnabled');
+  const saveBtn = document.getElementById('saveBtn');
+
+  if (slider && display && codeCutoff) {
+    slider.addEventListener('input', (e) => {
+      const val = e.target.value;
+      display.textContent = val + '%';
+      codeCutoff.textContent = (val / 100).toFixed(2);
+
+      if (val >= 80) {
+        badge.className = 'flex items-center gap-1.5 px-space-sm py-1 rounded bg-primary-fixed text-on-primary-fixed-variant font-code-sm text-code-sm font-semibold';
+        badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-primary inline-block"></span><span>STRICT: MINIMAL REVIEW</span>';
+      } else if (val >= 50) {
+        badge.className = 'flex items-center gap-1.5 px-space-sm py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-code-sm text-code-sm font-semibold';
+        badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-secondary inline-block animate-ping"></span><span>AMBER: REVIEW PROMPTED</span>';
+      } else {
+        badge.className = 'flex items-center gap-1.5 px-space-sm py-1 rounded bg-surface-variant text-on-surface-variant font-code-sm text-code-sm font-semibold';
+        badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-outline inline-block"></span><span>AGGRESSIVE: AUTOFILL ALL</span>';
+      }
+    });
+  }
+
+  // Toggle feedback in specimen
+  if (aiToggle && codeAiEnabled) {
+    aiToggle.addEventListener('change', (e) => {
+      codeAiEnabled.textContent = e.target.checked ? 'true' : 'false';
+      codeAiEnabled.className = e.target.checked ? 'text-primary font-semibold' : 'text-outline font-semibold';
+    });
+  }
+
+  // Save shortcut simulation
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      const orig = saveBtn.innerHTML;
+      saveBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span><span>Saved to SQLite</span>';
+      setTimeout(() => {
+        saveBtn.innerHTML = orig;
+      }, 1500);
+    });
+  }
+
+  // Support ⌘S / Ctrl+S
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+      e.preventDefault();
+      if (saveBtn) saveBtn.click();
+    }
+  });
+</script></main></div></body></html>

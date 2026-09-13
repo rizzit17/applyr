@@ -1,14 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Sparkles,
-  Settings as SettingsIcon,
-  CheckCircle2,
-  AlertTriangle,
-  RotateCcw,
-  FileText,
-  AlertCircle,
-  ExternalLink,
-} from 'lucide-react';
 import { Profile, FillResultSummary } from '../core/types';
 import {
   getStoredProfiles,
@@ -70,7 +60,7 @@ export const Popup: React.FC = () => {
     if (!activeId) return;
     setFilling(true);
     setFillResult(null);
-    setStatusMessage('Scanning DOM & filling fields...');
+    setStatusMessage('Filling form fields...');
 
     try {
       if (typeof chrome !== 'undefined' && chrome.runtime) {
@@ -82,12 +72,12 @@ export const Popup: React.FC = () => {
               setFillResult(response.result);
               setStatusMessage('');
             } else {
-              setStatusMessage('Unable to complete fill on this page.');
+              setStatusMessage('No supported form found on this page.');
             }
           }
         );
       } else {
-        // Fallback demo simulation for testing
+        // Mock preview simulation for testing/dev
         setTimeout(() => {
           setFilling(false);
           setFillResult({
@@ -102,16 +92,23 @@ export const Popup: React.FC = () => {
                 reason: 'Custom question match',
                 actionTaken: 'skipped-low-confidence',
               },
+              {
+                name: 'eeo_race',
+                labelText: 'Demographic self-identification category',
+                confidence: 0.7,
+                reason: 'EEO standard match',
+                actionTaken: 'skipped-low-confidence',
+              },
             ],
             hasCrossOriginIframes: false,
-            resumeFilePrompt: 'jane_doe_backend_resume.pdf',
+            resumeFilePrompt: activeProfile?.resumeFileName || 'resume.pdf',
           });
-        }, 600);
+        }, 400);
       }
     } catch (err) {
       console.error('Error triggering fill:', err);
       setFilling(false);
-      setStatusMessage('Fill trigger failed.');
+      setStatusMessage('Failed to trigger fill.');
     }
   };
 
@@ -122,8 +119,8 @@ export const Popup: React.FC = () => {
       if (cache[currentHostname]) {
         delete cache[currentHostname];
         await saveStoredCache(cache);
-        setStatusMessage(`Cleared learned mappings for ${currentHostname}`);
-        setTimeout(() => setStatusMessage(''), 3000);
+        setStatusMessage(`Cleared mappings for ${currentHostname}`);
+        setTimeout(() => setStatusMessage(''), 2500);
       }
     } catch (err) {
       console.error('Failed to reset site cache:', err);
@@ -142,156 +139,150 @@ export const Popup: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="popup-container" style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <div className="spinner" style={{ borderColor: 'var(--primary)', borderTopColor: 'transparent' }} />
+      <div className="w-[360px] p-6 flex items-center justify-center bg-surface min-h-[260px]">
+        <div className="flex items-center gap-2 text-xs text-primary font-medium">
+          <span className="material-symbols-outlined text-[18px] animate-spin">sync</span>
+          <span>Loading Applyr...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="popup-container">
-      {/* Header */}
-      <header className="header">
-        <div className="logo-section">
-          <div className="logo-icon">
-            <Sparkles size={16} color="#FFFFFF" />
-          </div>
-          <div>
-            <h1 className="brand-title">Applyr</h1>
-          </div>
-          <span className="brand-badge">Local</span>
+    <div className="w-[360px] bg-surface text-on-surface flex flex-col gap-4 p-4 antialiased select-none font-body-md">
+      {/* Clean Header */}
+      <header className="flex items-center justify-between pb-3 border-b border-outline-variant">
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-on-surface tracking-tight">Applyr</span>
+          <span className="h-2 w-2 rounded-full bg-primary inline-block"></span>
+          <span className="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[11px] font-semibold">
+            Local Only
+          </span>
         </div>
-        <div className="header-actions">
-          <button className="icon-btn" onClick={openOptions} title="Profile & Cache Settings">
-            <SettingsIcon size={16} />
-          </button>
-        </div>
+        <button
+          onClick={openOptions}
+          className="p-1 rounded-md hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors"
+          title="Open Settings & Profiles"
+          type="button"
+        >
+          <span className="material-symbols-outlined text-[18px]">tune</span>
+        </button>
       </header>
 
-      {/* Profile Selector */}
-      <div className="card">
-        <label className="card-label" htmlFor="profile-select">
-          Select Active Profile
+      {/* Profile Selector Card */}
+      <div className="p-3.5 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm flex flex-col gap-2">
+        <label
+          htmlFor="popup-profile-select"
+          className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant"
+        >
+          Active Profile
         </label>
+
         <select
-          id="profile-select"
-          className="profile-select"
+          id="popup-profile-select"
           value={activeId}
           onChange={handleProfileChange}
           disabled={filling}
+          className="w-full bg-surface-container-low rounded-lg p-2 text-sm text-on-surface border border-outline-variant focus:border-primary focus:outline-none cursor-pointer"
         >
           {profiles.map((p) => (
             <option key={p.id} value={p.id}>
-              {p.name} ({p.experience.currentTitle || 'Profile'})
+              {p.name} {p.experience.currentTitle ? `(${p.experience.currentTitle})` : ''}
             </option>
           ))}
         </select>
 
         {activeProfile && (
-          <div className="profile-preview">
-            <div className="preview-row">
+          <div className="pt-2 mt-1 border-t border-outline-variant/50 flex flex-col gap-1 text-xs text-on-surface-variant">
+            <div className="flex justify-between items-center">
               <span>Candidate:</span>
-              <span className="preview-val">
+              <span className="font-semibold text-on-surface">
                 {activeProfile.personal.firstName} {activeProfile.personal.lastName}
               </span>
             </div>
-            <div className="preview-row">
+            <div className="flex justify-between items-center">
               <span>Resume File:</span>
-              <span className="preview-val">{activeProfile.resumeFileName}</span>
+              <span className="text-primary truncate max-w-[180px]">
+                {activeProfile.resumeFileName}
+              </span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Fill Trigger Button */}
+      {/* Primary Fill Button */}
       <button
         id="fill-trigger-btn"
-        className="fill-button"
         onClick={handleFill}
         disabled={filling || !activeProfile}
+        className="w-full py-2.5 px-4 bg-primary hover:bg-primary-container text-on-primary text-sm font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        type="button"
       >
         {filling ? (
           <>
-            <div className="spinner" />
+            <span className="material-symbols-outlined text-[18px] animate-spin">sync</span>
             <span>Filling Form...</span>
           </>
         ) : (
           <>
-            <Sparkles size={16} />
-            <span>Fill This Form</span>
+            <span className="material-symbols-outlined text-[18px]">bolt</span>
+            <span>Fill Application Form</span>
           </>
         )}
       </button>
 
-      {/* In-flight status message */}
+      {/* Status feedback */}
       {statusMessage && (
-        <div style={{ fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center' }}>
+        <div className="text-xs text-center text-on-surface-variant">
           {statusMessage}
         </div>
       )}
 
-      {/* Fill Results Section */}
+      {/* Fill Results Strip */}
       {fillResult && (
-        <div className="results-section">
+        <div className="flex flex-col gap-2 p-3 rounded-lg bg-surface-container-lowest border border-outline-variant shadow-sm">
           <div
-            className={`result-banner ${
-              fillResult.reviewNeededCount === 0 ? 'success' : 'warning'
+            className={`flex items-center gap-2 p-2 rounded text-xs font-semibold ${
+              fillResult.reviewNeededCount === 0
+                ? 'bg-primary-fixed text-on-primary-fixed-variant'
+                : 'bg-secondary-fixed text-on-secondary-fixed'
             }`}
           >
-            {fillResult.reviewNeededCount === 0 ? (
-              <CheckCircle2 size={18} />
-            ) : (
-              <AlertTriangle size={18} />
-            )}
+            <span className="material-symbols-outlined text-[16px]">
+              {fillResult.reviewNeededCount === 0 ? 'check_circle' : 'warning'}
+            </span>
             <span>
               Filled {fillResult.filledCount} of {fillResult.totalScanned} fields
-              {fillResult.reviewNeededCount > 0 && ` • ${fillResult.reviewNeededCount} need review`}
+              {fillResult.reviewNeededCount > 0 && ` · ${fillResult.reviewNeededCount} need review`}
             </span>
-          </div>
-
-          <div className="stats-grid">
-            <div className="stat-box">
-              <div className="stat-number success">{fillResult.filledCount}</div>
-              <div className="stat-label">Auto-Filled</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-number warning">{fillResult.reviewNeededCount}</div>
-              <div className="stat-label">Need Review</div>
-            </div>
           </div>
 
           {/* Resume Prompt */}
           {fillResult.resumeFilePrompt && (
-            <div className="resume-notice">
-              <FileText size={16} color="#818CF8" />
-              <span>
-                Attach resume manually: <strong>{fillResult.resumeFilePrompt}</strong>
+            <div className="p-2 rounded bg-primary-fixed/20 border border-primary-fixed-dim text-xs text-on-surface flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary text-[16px]">picture_as_pdf</span>
+              <span className="truncate">
+                Attach resume: <strong>{fillResult.resumeFilePrompt}</strong>
               </span>
-            </div>
-          )}
-
-          {/* Cross-origin iframe limitation notice */}
-          {fillResult.hasCrossOriginIframes && (
-            <div className="alert-box">
-              <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <div>
-                <strong>Notice:</strong> Some form sections are in cross-origin iframes and cannot be
-                scanned due to browser security.
-              </div>
             </div>
           )}
 
           {/* Flagged Fields for Review */}
           {fillResult.flaggedFields.length > 0 && (
-            <div>
-              <span className="card-label">Fields Requiring Eyeball Check:</span>
-              <div className="flagged-list">
+            <div className="flex flex-col gap-1 mt-1">
+              <span className="text-[11px] font-semibold text-on-surface-variant">
+                Fields to double check:
+              </span>
+              <div className="max-h-24 overflow-y-auto space-y-1">
                 {fillResult.flaggedFields.map((f, i) => (
-                  <div key={i} className="flagged-item">
-                    <span className="flagged-name" title={f.labelText}>
+                  <div
+                    key={i}
+                    className="p-1.5 rounded bg-surface-container text-xs flex justify-between items-center"
+                  >
+                    <span className="text-on-surface truncate max-w-[220px]" title={f.labelText}>
                       {f.labelText}
                     </span>
-                    <span className="flagged-badge">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-semibold">
                       {Math.round(f.confidence * 100)}%
                     </span>
                   </div>
@@ -302,23 +293,27 @@ export const Popup: React.FC = () => {
         </div>
       )}
 
-      {/* Footer */}
-      <footer className="footer">
+      {/* Clean Footer */}
+      <footer className="pt-2 border-t border-outline-variant flex items-center justify-between text-xs text-on-surface-variant">
         {currentHostname ? (
           <button
-            className="footer-link"
             onClick={handleResetSiteCache}
-            title={`Reset learned mappings for ${currentHostname}`}
+            className="hover:text-primary transition-colors flex items-center gap-1"
+            type="button"
           >
-            <RotateCcw size={12} />
+            <span className="material-symbols-outlined text-[13px]">history</span>
             <span>Reset site cache</span>
           </button>
         ) : (
-          <div />
+          <div></div>
         )}
-        <button className="footer-link" onClick={openOptions}>
-          <span>Options</span>
-          <ExternalLink size={12} />
+        <button
+          onClick={openOptions}
+          className="hover:text-primary transition-colors flex items-center gap-1 font-medium"
+          type="button"
+        >
+          <span>Dashboard</span>
+          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
         </button>
       </footer>
     </div>

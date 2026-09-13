@@ -1,22 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import {
-  User,
-  Database,
-  Sliders,
-  Plus,
-  Copy,
-  Trash2,
-  Download,
-  Upload,
-  Save,
-  CheckCircle2,
-  Sparkles,
-  Link as LinkIcon,
-  Briefcase,
-  GraduationCap,
-  MessageSquare,
-  AlertTriangle,
-} from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Profile, Settings, FieldMappingCache } from '../core/types';
 import {
   getStoredProfiles,
@@ -28,8 +10,80 @@ import {
   validateProfile,
 } from '../core/schema';
 
+type OptionsTab = 'profiles' | 'qa' | 'mappings' | 'settings';
+
+interface QAItem {
+  id: string;
+  category: 'exact' | 'eeo' | 'behavioral';
+  question: string;
+  tag?: string;
+  answer: string;
+  keywords: string;
+}
+
+const DEFAULT_QA_ITEMS: QAItem[] = [
+  {
+    id: 'qa-1',
+    category: 'exact',
+    question: 'Are you authorized to work in the United States?',
+    tag: 'Work Authorization',
+    answer: 'Yes',
+    keywords: 'authorized work us authorization visa legal',
+  },
+  {
+    id: 'qa-2',
+    category: 'eeo',
+    question: 'Disability status',
+    tag: 'EEO Voluntary Self-ID',
+    answer: 'I do not have a disability',
+    keywords: 'disability handicap status medical condition accommodation',
+  },
+  {
+    id: 'qa-3',
+    category: 'eeo',
+    question: 'Gender identity',
+    tag: 'EEO Voluntary Self-ID',
+    answer: 'Decline to self-identify',
+    keywords: 'gender sex identity pronouns',
+  },
+  {
+    id: 'qa-4',
+    category: 'exact',
+    question: 'Will you now or in the future require visa sponsorship?',
+    tag: 'Visa Sponsorship',
+    answer: 'No',
+    keywords: 'require sponsorship h1b visa immigration transfer',
+  },
+  {
+    id: 'qa-5',
+    category: 'eeo',
+    question: 'Veteran status',
+    tag: 'EEO Voluntary Self-ID',
+    answer: 'I am not a protected veteran',
+    keywords: 'veteran status military armed forces vevraa service',
+  },
+  {
+    id: 'qa-6',
+    category: 'behavioral',
+    question: 'Why are you interested in this role?',
+    tag: 'Motivation',
+    answer:
+      'My background in high-throughput backend services aligns directly with your mission to scale distributed systems.',
+    keywords: 'interested role passion motivation goals background engineering',
+  },
+  {
+    id: 'qa-7',
+    category: 'behavioral',
+    question: 'Why do you want to work here?',
+    tag: 'Company Fit',
+    answer:
+      'I am drawn to the team’s focus on high-scale distributed systems and developer-first infrastructure.',
+    keywords: 'why work here company mission values culture team fit',
+  },
+];
+
 export const Options: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'profiles' | 'cache' | 'settings'>('profiles');
+  const [activeTab, setActiveTab] = useState<OptionsTab>('profiles');
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedProfileId, setSelectedProfileId] = useState<string>('');
   const [cache, setCache] = useState<FieldMappingCache>({});
@@ -39,7 +93,29 @@ export const Options: React.FC = () => {
     aiProvider: 'gemini',
     aiModel: 'gemini-1.5-flash',
   });
+
+  // Notifications
   const [toastMessage, setToastMessage] = useState<string>('');
+
+  // Q&A State
+  const [qaItems, setQaItems] = useState<QAItem[]>(DEFAULT_QA_ITEMS);
+  const [qaFilter, setQaFilter] = useState<'all' | 'exact' | 'eeo' | 'behavioral'>('all');
+  const [qaSearchQuery, setQaSearchQuery] = useState<string>('');
+  const [isQaModalOpen, setIsQaModalOpen] = useState<boolean>(false);
+  const [newQuestion, setNewQuestion] = useState<string>('');
+  const [newCategory, setNewCategory] = useState<'exact' | 'eeo' | 'behavioral'>('exact');
+  const [newTag, setNewTag] = useState<string>('');
+  const [newAnswer, setNewAnswer] = useState<string>('');
+
+  // Site Mappings State
+  const [mappingSearchQuery, setMappingSearchQuery] = useState<string>('');
+  const [showBuiltIns, setShowBuiltIns] = useState<boolean>(false);
+
+  // File import ref
+  const importInputRef = useRef<HTMLInputElement | null>(null);
+  const resumeInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
     async function load() {
@@ -60,7 +136,7 @@ export const Options: React.FC = () => {
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(''), 3500);
+    setTimeout(() => setToastMessage(''), 2800);
   };
 
   const currentProfile = profiles.find((p) => p.id === selectedProfileId) || profiles[0];
@@ -83,15 +159,17 @@ export const Options: React.FC = () => {
   };
 
   const handleSaveProfiles = async () => {
+    setIsSaving(true);
     await saveProfiles(profiles);
-    showToast('Profiles saved successfully!');
+    setIsSaving(false);
+    showToast('Profile saved successfully');
   };
 
   const handleAddProfile = () => {
     const newId = `profile_${Date.now()}`;
     const newProfile: Profile = {
       id: newId,
-      name: `New Profile ${profiles.length + 1}`,
+      name: `Profile ${profiles.length + 1}`,
       personal: {
         firstName: '',
         lastName: '',
@@ -121,6 +199,7 @@ export const Options: React.FC = () => {
     const next = [...profiles, newProfile];
     setProfiles(next);
     setSelectedProfileId(newId);
+    showToast(`Created ${newProfile.name}`);
   };
 
   const handleDuplicateProfile = () => {
@@ -142,12 +221,12 @@ export const Options: React.FC = () => {
       alert('You must have at least one profile.');
       return;
     }
-    if (confirm(`Delete profile "${currentProfile.name}"?`)) {
+    if (confirm(`Are you sure you want to delete "${currentProfile.name}"?`)) {
       const next = profiles.filter((p) => p.id !== currentProfile.id);
       setProfiles(next);
       setSelectedProfileId(next[0].id);
       await saveProfiles(next);
-      showToast('Profile deleted.');
+      showToast('Profile deleted');
     }
   };
 
@@ -160,7 +239,7 @@ export const Options: React.FC = () => {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    showToast('Profiles exported as JSON.');
+    showToast('Profiles exported as JSON');
   };
 
   const handleImportJson = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,555 +270,1119 @@ export const Options: React.FC = () => {
     e.target.value = '';
   };
 
-  // Custom Answers CRUD
-  const handleAddCustomAnswer = () => {
-    if (!currentProfile) return;
-    const answers = { ...(currentProfile.customAnswers || {}), 'new question': 'answer' };
-    updateProfileField('customAnswers', answers);
+  // Resume File Selection
+  const handleReplaceResume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    updateProfileField('resumeFileName', file.name);
+    showToast(`Selected file: ${file.name}`);
+    e.target.value = '';
   };
 
-  const handleUpdateCustomAnswerKey = (oldKey: string, newKey: string) => {
-    if (!currentProfile || !currentProfile.customAnswers) return;
-    const answers = { ...currentProfile.customAnswers };
-    const val = answers[oldKey];
-    delete answers[oldKey];
-    answers[newKey] = val;
-    updateProfileField('customAnswers', answers);
+  // Q&A Handlers
+  const handleAddQARule = () => {
+    if (!newQuestion.trim() || !newAnswer.trim()) {
+      alert('Please provide both question text and target answer.');
+      return;
+    }
+
+    const item: QAItem = {
+      id: `qa-${Date.now()}`,
+      category: newCategory,
+      question: newQuestion.trim(),
+      tag: newTag.trim() || (newCategory === 'eeo' ? 'EEO' : 'Custom'),
+      answer: newAnswer.trim(),
+      keywords: newQuestion.toLowerCase(),
+    };
+
+    setQaItems([item, ...qaItems]);
+    setIsQaModalOpen(false);
+    setNewQuestion('');
+    setNewAnswer('');
+    setNewTag('');
+    showToast('Added question override');
   };
 
-  const handleUpdateCustomAnswerVal = (key: string, val: string) => {
-    if (!currentProfile || !currentProfile.customAnswers) return;
-    const answers = { ...currentProfile.customAnswers, [key]: val };
-    updateProfileField('customAnswers', answers);
+  const handleDeleteQARule = (id: string) => {
+    setQaItems(qaItems.filter((item) => item.id !== id));
+    showToast('Question removed');
   };
 
-  const handleDeleteCustomAnswer = (key: string) => {
-    if (!currentProfile || !currentProfile.customAnswers) return;
-    const answers = { ...currentProfile.customAnswers };
-    delete answers[key];
-    updateProfileField('customAnswers', answers);
+  const handleImportEEODefaults = () => {
+    setQaItems(DEFAULT_QA_ITEMS);
+    showToast('Imported common EEO questions');
   };
 
   // Cache Operations
-  const handleDeleteSiteCache = async (hostname: string) => {
-    const next = { ...cache };
-    delete next[hostname];
-    setCache(next);
-    await saveStoredCache(next);
-    showToast(`Deleted cache for ${hostname}`);
-  };
-
   const handleClearAllCache = async () => {
-    if (confirm('Clear all learned field mappings across all websites?')) {
+    if (confirm('Clear all learned field mappings for all websites?')) {
       setCache({});
       await saveStoredCache({});
-      showToast('Learned mappings cleared.');
+      showToast('Cleared all site mappings');
     }
   };
 
   // Settings
   const handleSaveSettings = async () => {
     await saveSettings(settings);
-    showToast('Settings saved.');
+    showToast('Settings saved');
   };
 
+  const handleRevertSettings = () => {
+    setSettings({
+      aiFallbackEnabled: false,
+      confidenceThreshold: 0.6,
+      aiProvider: 'gemini',
+      aiModel: 'gemini-1.5-flash',
+    });
+    showToast('Reverted to default settings');
+  };
+
+  // Keyboard shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        if (activeTab === 'profiles') handleSaveProfiles();
+        if (activeTab === 'settings') handleSaveSettings();
+      }
+      if (e.key === 'Escape') {
+        setIsQaModalOpen(false);
+        setQaSearchQuery('');
+        setMappingSearchQuery('');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeTab, profiles, settings, qaItems]);
+
+  // Filtered Q&A Items
+  const filteredQaItems = qaItems.filter((item) => {
+    const matchesCategory = qaFilter === 'all' || item.category === qaFilter;
+    const q = qaSearchQuery.toLowerCase().trim();
+    const matchesQuery =
+      !q ||
+      item.question.toLowerCase().includes(q) ||
+      item.keywords.toLowerCase().includes(q) ||
+      item.answer.toLowerCase().includes(q);
+    return matchesCategory && matchesQuery;
+  });
+
+  // Filtered Cached Hostnames
+  const cachedHostnames = Object.keys(cache).filter((h) =>
+    h.toLowerCase().includes(mappingSearchQuery.toLowerCase().trim())
+  );
+
   return (
-    <div className="options-layout">
-      {/* Left Navigation Sidebar */}
-      <aside className="sidebar">
-        <div className="brand-header">
-          <div className="logo-badge">
-            <Sparkles size={20} color="#FFFFFF" />
+    <div className="min-h-screen bg-surface font-body-md text-on-surface antialiased">
+      {/* Hidden file inputs */}
+      <input
+        ref={importInputRef}
+        type="file"
+        accept=".json"
+        onChange={handleImportJson}
+        style={{ display: 'none' }}
+      />
+      <input
+        ref={resumeInputRef}
+        type="file"
+        accept=".pdf,.doc,.docx"
+        onChange={handleReplaceResume}
+        style={{ display: 'none' }}
+      />
+
+      {/* CLEAN SIDEBAR */}
+      <aside className="fixed left-0 top-0 h-full w-64 bg-surface-container-low border-r border-outline-variant z-50 flex flex-col justify-between">
+        <div className="flex flex-col">
+          {/* Clean Brand Header */}
+          <div className="px-5 py-5 border-b border-outline-variant">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold tracking-tight text-on-surface">Applyr</span>
+              <span className="h-2 w-2 rounded-full bg-primary inline-block"></span>
+            </div>
+            <p className="text-xs text-on-surface-variant mt-1">Local-First Form Filler</p>
           </div>
-          <div className="brand-text">
-            <h1>Applyr</h1>
-            <p>Local-First Configuration</p>
-          </div>
+
+          {/* Navigation Menu */}
+          <nav className="flex flex-col gap-1 px-3 pt-4">
+            <button
+              onClick={() => setActiveTab('profiles')}
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm transition-colors text-left ${
+                activeTab === 'profiles'
+                  ? 'bg-surface-container-highest text-on-surface font-semibold text-primary'
+                  : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px]">folder_shared</span>
+                <span>Profiles</span>
+              </div>
+              <span className="text-xs px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">
+                {profiles.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('qa')}
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm transition-colors text-left ${
+                activeTab === 'qa'
+                  ? 'bg-surface-container-highest text-on-surface font-semibold text-primary'
+                  : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px]">help_outline</span>
+                <span>Custom Q&amp;A</span>
+              </div>
+              <span className="text-xs px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">
+                {qaItems.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('mappings')}
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm transition-colors text-left ${
+                activeTab === 'mappings'
+                  ? 'bg-surface-container-highest text-on-surface font-semibold text-primary'
+                  : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px]">tab_unselected</span>
+                <span>Site Mappings</span>
+              </div>
+              <span className="text-xs px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">
+                {Object.keys(cache).length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm transition-colors text-left ${
+                activeTab === 'settings'
+                  ? 'bg-surface-container-highest text-on-surface font-semibold text-primary'
+                  : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px]">tune</span>
+                <span>Settings</span>
+              </div>
+            </button>
+          </nav>
         </div>
 
-        <nav className="nav-menu">
-          <button
-            className={`nav-item ${activeTab === 'profiles' ? 'active' : ''}`}
-            onClick={() => setActiveTab('profiles')}
-          >
-            <User size={18} />
-            <span>Profiles</span>
-          </button>
-          <button
-            className={`nav-item ${activeTab === 'cache' ? 'active' : ''}`}
-            onClick={() => setActiveTab('cache')}
-          >
-            <Database size={18} />
-            <span>Site Mappings</span>
-          </button>
-          <button
-            className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('settings')}
-          >
-            <Sliders size={18} />
-            <span>Settings</span>
-          </button>
-        </nav>
-
-        {activeTab === 'profiles' && (
-          <div className="profiles-sidebar-section">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="section-label">Your Profiles</span>
-              <button className="btn btn-secondary" style={{ padding: '4px 8px' }} onClick={handleAddProfile}>
-                <Plus size={14} />
-                <span>New</span>
-              </button>
-            </div>
-
-            {profiles.map((p) => (
-              <div
-                key={p.id}
-                className={`profile-pill ${p.id === selectedProfileId ? 'active' : ''}`}
-                onClick={() => setSelectedProfileId(p.id)}
-              >
-                <span>{p.name}</span>
-                <span style={{ fontSize: '11px', opacity: 0.7 }}>
-                  {p.experience?.yearsExperience ? `${p.experience.yearsExperience}y` : ''}
-                </span>
-              </div>
-            ))}
+        {/* Clean Local Storage Badge */}
+        <div className="p-3 m-3 rounded-lg border border-outline-variant bg-surface-container-lowest flex items-center justify-between text-xs text-on-surface-variant">
+          <div className="flex items-center gap-1.5 text-primary font-medium">
+            <span className="material-symbols-outlined text-[16px]">lock</span>
+            <span>Local Storage Only</span>
           </div>
-        )}
+          <span className="text-[11px] text-on-surface-variant">0 Cloud Egress</span>
+        </div>
       </aside>
 
-      {/* Main Content Pane */}
-      <main className="main-content">
-        {/* TAB 1: PROFILES */}
-        {activeTab === 'profiles' && currentProfile && (
-          <div>
-            <div className="content-header">
-              <div className="content-title">
-                <h2>Edit Profile: {currentProfile.name}</h2>
-                <p>Personal details, experience, links, and custom Q&A answers.</p>
-              </div>
-              <div className="header-buttons">
-                <button className="btn btn-secondary" onClick={handleDuplicateProfile}>
-                  <Copy size={14} />
-                  <span>Duplicate</span>
-                </button>
-                <button className="btn btn-secondary" onClick={handleExportJson}>
-                  <Download size={14} />
-                  <span>Export JSON</span>
-                </button>
-                <label className="btn btn-secondary" style={{ cursor: 'pointer' }}>
-                  <Upload size={14} />
-                  <span>Import JSON</span>
-                  <input type="file" accept=".json" onChange={handleImportJson} style={{ display: 'none' }} />
-                </label>
-                <button className="btn btn-danger" onClick={handleDeleteProfile}>
-                  <Trash2 size={14} />
-                </button>
-                <button className="btn btn-primary" onClick={handleSaveProfiles}>
-                  <Save size={14} />
-                  <span>Save Profile</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Profile Name & Resume */}
-            <div className="card-section">
-              <h3>
-                <User size={18} color="#818CF8" />
-                Profile Identity
-              </h3>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Profile Name</label>
-                  <input
-                    type="text"
-                    value={currentProfile.name}
-                    onChange={(e) => updateProfileField('name', e.target.value)}
-                    placeholder="e.g. Backend, ML, Fullstack"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Default Resume Attachment File Name</label>
-                  <input
-                    type="text"
-                    value={currentProfile.resumeFileName}
-                    onChange={(e) => updateProfileField('resumeFileName', e.target.value)}
-                    placeholder="e.g. jane_doe_resume.pdf"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Personal Details */}
-            <div className="card-section">
-              <h3>
-                <User size={18} color="#818CF8" />
-                Personal & Contact Info
-              </h3>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    value={currentProfile.personal.firstName}
-                    onChange={(e) => updateNestedField('personal', 'firstName', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    value={currentProfile.personal.lastName}
-                    onChange={(e) => updateNestedField('personal', 'lastName', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email Address</label>
-                  <input
-                    type="email"
-                    value={currentProfile.personal.email}
-                    onChange={(e) => updateNestedField('personal', 'email', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <input
-                    type="tel"
-                    value={currentProfile.personal.phone}
-                    onChange={(e) => updateNestedField('personal', 'phone', e.target.value)}
-                  />
-                </div>
-                <div className="form-group full-width">
-                  <label>Location (City, State / Country)</label>
-                  <input
-                    type="text"
-                    value={currentProfile.personal.location}
-                    onChange={(e) => updateNestedField('personal', 'location', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Online Profiles & Links */}
-            <div className="card-section">
-              <h3>
-                <LinkIcon size={18} color="#818CF8" />
-                Links & Portfolios
-              </h3>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>LinkedIn URL</label>
-                  <input
-                    type="url"
-                    value={currentProfile.links.linkedin || ''}
-                    onChange={(e) => updateNestedField('links', 'linkedin', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>GitHub URL</label>
-                  <input
-                    type="url"
-                    value={currentProfile.links.github || ''}
-                    onChange={(e) => updateNestedField('links', 'github', e.target.value)}
-                  />
-                </div>
-                <div className="form-group full-width">
-                  <label>Portfolio / Personal Website</label>
-                  <input
-                    type="url"
-                    value={currentProfile.links.portfolio || ''}
-                    onChange={(e) => updateNestedField('links', 'portfolio', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Experience & Summary */}
-            <div className="card-section">
-              <h3>
-                <Briefcase size={18} color="#818CF8" />
-                Experience & Summary
-              </h3>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Current / Target Job Title</label>
-                  <input
-                    type="text"
-                    value={currentProfile.experience.currentTitle}
-                    onChange={(e) => updateNestedField('experience', 'currentTitle', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Total Years of Experience</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="50"
-                    value={currentProfile.experience.yearsExperience}
-                    onChange={(e) => updateNestedField('experience', 'yearsExperience', Number(e.target.value))}
-                  />
-                </div>
-                <div className="form-group full-width">
-                  <label>Candidate Summary / Cover Letter Statement</label>
-                  <textarea
-                    value={currentProfile.experience.summary}
-                    onChange={(e) => updateNestedField('experience', 'summary', e.target.value)}
-                    placeholder="Short bio used for summary fields and 'why are you interested' questions"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Education */}
-            <div className="card-section">
-              <h3>
-                <GraduationCap size={18} color="#818CF8" />
-                Education
-              </h3>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Degree</label>
-                  <input
-                    type="text"
-                    value={currentProfile.education.degree}
-                    onChange={(e) => updateNestedField('education', 'degree', e.target.value)}
-                    placeholder="B.S. Computer Science"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Institution / University</label>
-                  <input
-                    type="text"
-                    value={currentProfile.education.institution}
-                    onChange={(e) => updateNestedField('education', 'institution', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Graduation Year</label>
-                  <input
-                    type="number"
-                    value={currentProfile.education.graduationYear}
-                    onChange={(e) => updateNestedField('education', 'graduationYear', Number(e.target.value))}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Custom Answers & EEO Overrides */}
-            <div className="card-section">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                <h3>
-                  <MessageSquare size={18} color="#818CF8" />
-                  Custom Q&A & EEO Overrides
-                </h3>
-                <button className="btn btn-secondary" onClick={handleAddCustomAnswer}>
-                  <Plus size={14} />
-                  <span>Add Question</span>
-                </button>
-              </div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                Pre-populate answers for recurring application questions (e.g. sponsorship, authorization, gender, veteran status).
-              </p>
-
-              {currentProfile.customAnswers &&
-                Object.entries(currentProfile.customAnswers).map(([qKey, val]) => (
-                  <div key={qKey} className="qa-row">
-                    <input
-                      type="text"
-                      value={qKey}
-                      onChange={(e) => handleUpdateCustomAnswerKey(qKey, e.target.value)}
-                      placeholder="Question keywords..."
-                    />
-                    <input
-                      type="text"
-                      value={val}
-                      onChange={(e) => handleUpdateCustomAnswerVal(qKey, e.target.value)}
-                      placeholder="Pre-set answer..."
-                    />
-                    <button className="btn btn-danger" onClick={() => handleDeleteCustomAnswer(qKey)}>
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                ))}
-            </div>
+      {/* MAIN CONTENT AREA */}
+      <div className="pl-64">
+        {/* CLEAN TOP HEADER */}
+        <header className="sticky top-0 h-14 bg-surface/95 backdrop-blur-sm border-b border-outline-variant z-40 flex items-center justify-between px-8">
+          <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+            <span className="font-semibold text-on-surface">Applyr</span>
+            <span className="text-outline-variant">/</span>
+            <span className="text-on-surface">
+              {activeTab === 'profiles' && 'Profiles'}
+              {activeTab === 'qa' && 'Custom Q&A & EEO'}
+              {activeTab === 'mappings' && 'Site Mappings'}
+              {activeTab === 'settings' && 'Settings'}
+            </span>
           </div>
-        )}
 
-        {/* TAB 2: LEARNED CACHE */}
-        {activeTab === 'cache' && (
-          <div>
-            <div className="content-header">
-              <div className="content-title">
-                <h2>Learned Site Mappings</h2>
-                <p>Per-hostname field signatures learned from your manual corrections.</p>
-              </div>
-              <div>
-                <button className="btn btn-danger" onClick={handleClearAllCache}>
-                  <Trash2 size={14} />
-                  <span>Clear Entire Cache</span>
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-xs font-medium">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
+              Local Only
+            </span>
+          </div>
+        </header>
 
-            {Object.keys(cache).length === 0 ? (
-              <div className="card-section" style={{ textAlign: 'center', padding: '40px' }}>
-                <Database size={36} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
-                <h3>No site mappings recorded yet</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
-                  When you autofill a job form and make manual corrections, Applyr will automatically record the mappings here.
-                </p>
-              </div>
-            ) : (
-              Object.entries(cache).map(([hostname, fields]) => (
-                <div key={hostname} className="card-section">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3>{hostname}</h3>
-                    <button className="btn btn-danger" style={{ padding: '4px 10px' }} onClick={() => handleDeleteSiteCache(hostname)}>
-                      <Trash2 size={12} />
-                      <span>Delete Mappings</span>
-                    </button>
-                  </div>
+        {/* MAIN BODY CONTENT */}
+        <main className="w-full p-8 max-w-6xl mx-auto">
+          {/* ======================================================== */}
+          {/* TAB 1: PROFILES */}
+          {/* ======================================================== */}
+          {activeTab === 'profiles' && currentProfile && (
+            <div className="flex flex-col lg:flex-row gap-6 items-start">
+              {/* Left Column: Profiles List */}
+              <div className="w-full lg:w-64 shrink-0 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
+                    Your Profiles
+                  </h2>
+                  <button
+                    onClick={handleAddProfile}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-semibold transition-colors"
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined text-[15px] text-primary">add</span>
+                    <span>New</span>
+                  </button>
+                </div>
 
-                  <table className="cache-table">
-                    <thead>
-                      <tr>
-                        <th>Field Signature</th>
-                        <th>Mapped Canonical Field</th>
-                        <th>Source</th>
-                        <th>Confidence</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(fields).map(([sig, entry]) => (
-                        <tr key={sig}>
-                          <td><code>{sig}</code></td>
-                          <td><strong>{entry.canonicalField}</strong></td>
-                          <td>
-                            <span className={`badge ${entry.source === 'ai' ? 'badge-ai' : 'badge-correction'}`}>
-                              {entry.source}
+                <div className="flex flex-col gap-2">
+                  {profiles.map((p) => {
+                    const isActive = p.id === selectedProfileId;
+                    return (
+                      <div
+                        key={p.id}
+                        onClick={() => setSelectedProfileId(p.id)}
+                        className={`p-3 rounded-lg border transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-surface-container-lowest border-primary shadow-sm ring-1 ring-primary'
+                            : 'bg-surface-container-low border-outline-variant/60 hover:bg-surface-container-lowest'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-sm text-on-surface">{p.name}</span>
+                          {isActive && (
+                            <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed">
+                              Active
                             </span>
-                          </td>
-                          <td>{Math.round(entry.confidence * 100)}%</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          )}
+                        </div>
+                        <p className="text-xs text-on-surface-variant mt-1 truncate">
+                          {p.experience.currentTitle || 'Job Applicant'}
+                          {p.experience.yearsExperience ? ` · ${p.experience.yearsExperience}y exp` : ''}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))
-            )}
-          </div>
-        )}
-
-        {/* TAB 3: SETTINGS */}
-        {activeTab === 'settings' && (
-          <div>
-            <div className="content-header">
-              <div className="content-title">
-                <h2>Extension Settings</h2>
-                <p>Confidence thresholds and optional metadata-only AI fallback.</p>
-              </div>
-              <button className="btn btn-primary" onClick={handleSaveSettings}>
-                <Save size={14} />
-                <span>Save Settings</span>
-              </button>
-            </div>
-
-            {/* Threshold Setting */}
-            <div className="card-section">
-              <h3>
-                <Sliders size={18} color="#818CF8" />
-                Classification Threshold
-              </h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                Fields with classification confidence below this threshold will be left empty and visually highlighted for your review.
-              </p>
-
-              <div className="form-group" style={{ maxWidth: '400px' }}>
-                <label>
-                  Minimum Confidence Threshold: <strong>{Math.round(settings.confidenceThreshold * 100)}%</strong>
-                </label>
-                <input
-                  type="range"
-                  min="0.4"
-                  max="0.9"
-                  step="0.05"
-                  value={settings.confidenceThreshold}
-                  onChange={(e) => setSettings({ ...settings, confidenceThreshold: parseFloat(e.target.value) })}
-                />
-              </div>
-            </div>
-
-            {/* AI Fallback (Optional) */}
-            <div className="card-section">
-              <h3>
-                <Sparkles size={18} color="#818CF8" />
-                Optional AI Fallback (Off by Default)
-              </h3>
-
-              <div style={{ background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '8px', padding: '12px', marginBottom: '18px' }}>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', color: '#FBBF24', fontWeight: 600, fontSize: '13px', marginBottom: '4px' }}>
-                  <AlertTriangle size={16} />
-                  Privacy & Data Disclosure
-                </div>
-                <p style={{ fontSize: '12px', color: '#CBD5E1', lineHeight: 1.5 }}>
-                  Enabling AI fallback sends <strong>only field metadata</strong> (label text, input type, placeholder) to the external LLM to classify unmapped fields.
-                  <strong> No personal values (names, addresses, phone numbers) are ever sent.</strong>
-                </p>
               </div>
 
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={settings.aiFallbackEnabled}
-                    onChange={(e) => setSettings({ ...settings, aiFallbackEnabled: e.target.checked })}
-                    style={{ width: '18px', height: '18px' }}
-                  />
-                  <span>Enable AI Fallback for unmapped fields</span>
-                </label>
-              </div>
+              {/* Right Column: Profile Editor */}
+              <div className="flex-1 min-w-0 flex flex-col gap-6 w-full">
+                {/* Header & Actions Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-outline-variant">
+                  <div>
+                    <h1 className="text-2xl font-bold text-on-surface">{currentProfile.name}</h1>
+                    <p className="text-sm text-on-surface-variant mt-0.5">
+                      Personal details, experience, links, and resume used for autofill.
+                    </p>
+                  </div>
 
-              {settings.aiFallbackEnabled && (
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>AI Provider</label>
-                    <select
-                      value={settings.aiProvider || 'gemini'}
-                      onChange={(e) => setSettings({ ...settings, aiProvider: e.target.value as any })}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={handleDuplicateProfile}
+                      className="px-3 py-1.5 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors"
+                      type="button"
                     >
-                      <option value="gemini">Google Gemini API (Recommended)</option>
-                      <option value="openai">OpenAI API</option>
-                      <option value="openrouter">OpenRouter</option>
-                    </select>
+                      Duplicate
+                    </button>
+                    <button
+                      onClick={handleExportJson}
+                      className="px-3 py-1.5 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors"
+                      type="button"
+                    >
+                      Export JSON
+                    </button>
+                    <button
+                      onClick={() => importInputRef.current?.click()}
+                      className="px-3 py-1.5 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors"
+                      type="button"
+                    >
+                      Import JSON
+                    </button>
+                    <button
+                      onClick={handleDeleteProfile}
+                      className="px-3 py-1.5 rounded bg-error/10 hover:bg-error/20 text-error text-xs font-medium transition-colors"
+                      type="button"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={handleSaveProfiles}
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold shadow-sm transition-colors"
+                      type="button"
+                    >
+                      <span className="material-symbols-outlined text-[15px]">
+                        {isSaving ? 'sync' : 'save'}
+                      </span>
+                      <span>Save Profile</span>
+                    </button>
                   </div>
-                  <div className="form-group">
-                    <label>Model Name</label>
+                </div>
+
+                {/* Section: Profile Identity & Resume */}
+                <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4">
+                  <h3 className="text-base font-semibold text-on-surface">Profile Identity &amp; Resume</h3>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-medium text-on-surface-variant">Profile Name</label>
                     <input
+                      className="w-full max-w-md bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
                       type="text"
-                      value={settings.aiModel || 'gemini-1.5-flash'}
-                      onChange={(e) => setSettings({ ...settings, aiModel: e.target.value })}
-                      placeholder="e.g. gemini-1.5-flash or gpt-4o-mini"
+                      value={currentProfile.name}
+                      onChange={(e) => updateProfileField('name', e.target.value)}
                     />
                   </div>
-                  <div className="form-group full-width">
-                    <label>API Key</label>
-                    <input
-                      type="password"
-                      value={settings.aiApiKey || ''}
-                      onChange={(e) => setSettings({ ...settings, aiApiKey: e.target.value })}
-                      placeholder="Enter your API key (stored securely in chrome.storage.local)"
+
+                  {/* Resume Attachment Box */}
+                  <div className="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <span className="material-symbols-outlined text-[24px]">picture_as_pdf</span>
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold text-on-surface">
+                          {currentProfile.resumeFileName || 'resume.pdf'}
+                        </div>
+                        <div className="text-xs text-on-surface-variant">Attached resume for form uploads</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 self-end sm:self-auto">
+                      <button
+                        onClick={() => showToast(`Downloaded ${currentProfile.resumeFileName}`)}
+                        className="px-3 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container text-xs font-medium border border-outline-variant transition-colors"
+                        type="button"
+                      >
+                        Download
+                      </button>
+                      <button
+                        onClick={() => resumeInputRef.current?.click()}
+                        className="px-3 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container text-xs font-medium border border-outline-variant transition-colors"
+                        type="button"
+                      >
+                        Replace File
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section: Personal & Contact Information */}
+                <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4">
+                  <h3 className="text-base font-semibold text-on-surface">Personal Information</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">First Name</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        value={currentProfile.personal.firstName}
+                        onChange={(e) => updateNestedField('personal', 'firstName', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Last Name</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        value={currentProfile.personal.lastName}
+                        onChange={(e) => updateNestedField('personal', 'lastName', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Email Address</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="email"
+                        value={currentProfile.personal.email}
+                        onChange={(e) => updateNestedField('personal', 'email', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Phone Number</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="tel"
+                        value={currentProfile.personal.phone}
+                        onChange={(e) => updateNestedField('personal', 'phone', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 md:col-span-2">
+                      <label className="text-xs font-medium text-on-surface-variant">
+                        Location (City, State / Country)
+                      </label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        value={currentProfile.personal.location}
+                        onChange={(e) => updateNestedField('personal', 'location', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section: Links & Socials */}
+                <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4">
+                  <h3 className="text-base font-semibold text-on-surface">Links &amp; Portfolios</h3>
+
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <span className="w-24 text-xs font-medium text-on-surface-variant shrink-0">LinkedIn</span>
+                      <input
+                        className="flex-1 bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="url"
+                        placeholder="https://linkedin.com/in/username"
+                        value={currentProfile.links.linkedin || ''}
+                        onChange={(e) => updateNestedField('links', 'linkedin', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <span className="w-24 text-xs font-medium text-on-surface-variant shrink-0">GitHub</span>
+                      <input
+                        className="flex-1 bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="url"
+                        placeholder="https://github.com/username"
+                        value={currentProfile.links.github || ''}
+                        onChange={(e) => updateNestedField('links', 'github', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <span className="w-24 text-xs font-medium text-on-surface-variant shrink-0">Portfolio</span>
+                      <input
+                        className="flex-1 bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="url"
+                        placeholder="https://yourportfolio.com"
+                        value={currentProfile.links.portfolio || ''}
+                        onChange={(e) => updateNestedField('links', 'portfolio', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section: Experience */}
+                <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4">
+                  <h3 className="text-base font-semibold text-on-surface">Experience &amp; Bio</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-2 flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Current / Target Title</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        value={currentProfile.experience.currentTitle}
+                        onChange={(e) => updateNestedField('experience', 'currentTitle', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Years of Experience</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="number"
+                        min="0"
+                        max="50"
+                        value={currentProfile.experience.yearsExperience || 0}
+                        onChange={(e) => updateNestedField('experience', 'yearsExperience', Number(e.target.value))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-medium text-on-surface-variant">Candidate Bio / Summary</label>
+                      <span className="text-xs text-on-surface-variant">
+                        {(currentProfile.experience.summary || '').length}/500
+                      </span>
+                    </div>
+                    <textarea
+                      className="w-full bg-surface-container-low rounded-lg p-3 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none leading-relaxed"
+                      maxLength={500}
+                      rows={3}
+                      value={currentProfile.experience.summary || ''}
+                      onChange={(e) => updateNestedField('experience', 'summary', e.target.value)}
                     />
+                  </div>
+                </div>
+
+                {/* Section: Education */}
+                <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4 mb-8">
+                  <h3 className="text-base font-semibold text-on-surface">Education</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Degree</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. B.S. Computer Science"
+                        value={currentProfile.education.degree}
+                        onChange={(e) => updateNestedField('education', 'degree', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Institution / University</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="text"
+                        placeholder="e.g. State University"
+                        value={currentProfile.education.institution}
+                        onChange={(e) => updateNestedField('education', 'institution', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Graduation Year</label>
+                      <input
+                        className="w-full bg-surface-container-low rounded-lg p-2.5 text-sm text-on-surface border border-outline-variant focus:bg-surface-container-lowest focus:border-primary focus:outline-none"
+                        type="number"
+                        value={currentProfile.education.graduationYear}
+                        onChange={(e) => updateNestedField('education', 'graduationYear', Number(e.target.value))}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 2: CUSTOM Q&A & EEO */}
+          {/* ======================================================== */}
+          {activeTab === 'qa' && (
+            <div className="flex flex-col gap-6">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant">
+                <div>
+                  <h1 className="text-2xl font-bold text-on-surface">Custom Q&amp;A &amp; EEO Overrides</h1>
+                  <p className="text-sm text-on-surface-variant mt-0.5">
+                    Pre-set answers for recurring job application prompts and demographic self-identification.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleImportEEODefaults}
+                    className="px-3.5 py-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors"
+                    type="button"
+                  >
+                    Import EEO Defaults
+                  </button>
+                  <button
+                    onClick={() => setIsQaModalOpen(true)}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold shadow-sm transition-colors"
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add</span>
+                    <span>Add Question</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Search & Filter Bar */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 bg-surface-container-lowest rounded-lg border border-outline-variant">
+                <div className="flex-1 flex items-center gap-2 px-2">
+                  <span className="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+                  <input
+                    className="w-full bg-transparent border-none outline-none text-sm text-on-surface placeholder:text-outline"
+                    placeholder="Search questions or keywords..."
+                    type="text"
+                    value={qaSearchQuery}
+                    onChange={(e) => setQaSearchQuery(e.target.value)}
+                  />
+                  {qaSearchQuery && (
+                    <button onClick={() => setQaSearchQuery('')} className="text-xs text-on-surface-variant hover:text-on-surface">
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1 overflow-x-auto">
+                  <button
+                    onClick={() => setQaFilter('all')}
+                    className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                      qaFilter === 'all'
+                        ? 'bg-surface-container-highest text-on-surface font-semibold'
+                        : 'text-on-surface-variant hover:bg-surface-container'
+                    }`}
+                  >
+                    All ({qaItems.length})
+                  </button>
+                  <button
+                    onClick={() => setQaFilter('exact')}
+                    className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                      qaFilter === 'exact'
+                        ? 'bg-surface-container-highest text-on-surface font-semibold'
+                        : 'text-on-surface-variant hover:bg-surface-container'
+                    }`}
+                  >
+                    Exact ({qaItems.filter((i) => i.category === 'exact').length})
+                  </button>
+                  <button
+                    onClick={() => setQaFilter('eeo')}
+                    className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                      qaFilter === 'eeo'
+                        ? 'bg-surface-container-highest text-on-surface font-semibold'
+                        : 'text-on-surface-variant hover:bg-surface-container'
+                    }`}
+                  >
+                    EEO ({qaItems.filter((i) => i.category === 'eeo').length})
+                  </button>
+                  <button
+                    onClick={() => setQaFilter('behavioral')}
+                    className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                      qaFilter === 'behavioral'
+                        ? 'bg-surface-container-highest text-on-surface font-semibold'
+                        : 'text-on-surface-variant hover:bg-surface-container'
+                    }`}
+                  >
+                    Behavioral ({qaItems.filter((i) => i.category === 'behavioral').length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Questions Table */}
+              <div className="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-outline-variant bg-surface-container-low text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                      <th className="py-3 px-4" scope="col">
+                        Question / Matcher
+                      </th>
+                      <th className="py-3 px-4" scope="col">
+                        Pre-set Answer
+                      </th>
+                      <th className="py-3 px-4 w-32" scope="col">
+                        Type
+                      </th>
+                      <th className="py-3 px-4 w-16 text-right" scope="col">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-outline-variant text-sm">
+                    {filteredQaItems.map((item) => (
+                      <tr key={item.id} className="hover:bg-surface-container-low/50 transition-colors">
+                        <td className="py-3 px-4 align-top">
+                          <div className="font-medium text-on-surface">{item.question}</div>
+                          {item.tag && (
+                            <span className="inline-block mt-1 text-[11px] px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">
+                              {item.tag}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 align-top">
+                          <div className="p-2 rounded bg-surface-container-low text-on-surface font-medium text-xs max-w-lg">
+                            {item.answer}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 align-top">
+                          <span
+                            className={`inline-block text-xs font-medium px-2 py-0.5 rounded ${
+                              item.category === 'exact'
+                                ? 'bg-primary-fixed text-on-primary-fixed-variant'
+                                : item.category === 'eeo'
+                                ? 'bg-surface-container-high text-on-surface'
+                                : 'bg-secondary-fixed text-on-secondary-fixed'
+                            }`}
+                          >
+                            {item.category === 'exact' && 'Exact'}
+                            {item.category === 'eeo' && 'EEO Standard'}
+                            {item.category === 'behavioral' && 'Behavioral'}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 align-top text-right">
+                          <button
+                            onClick={() => handleDeleteQARule(item.id)}
+                            className="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors"
+                            title="Delete"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">delete</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {filteredQaItems.length === 0 && (
+                  <div className="p-8 text-center text-sm text-on-surface-variant">
+                    No matching questions found.
+                  </div>
+                )}
+              </div>
+
+              {/* Add Question Modal */}
+              {isQaModalOpen && (
+                <div className="fixed inset-0 bg-inverse-surface/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                  <div className="w-full max-w-lg bg-surface-container-lowest rounded-xl border border-outline-variant shadow-xl overflow-hidden flex flex-col">
+                    <div className="p-4 border-b border-outline-variant bg-surface-container-low flex items-center justify-between">
+                      <h3 className="text-base font-semibold text-on-surface">Add Question Override</h3>
+                      <button
+                        onClick={() => setIsQaModalOpen(false)}
+                        className="p-1 text-on-surface-variant hover:text-on-surface rounded"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">close</span>
+                      </button>
+                    </div>
+
+                    <div className="p-5 flex flex-col gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-medium text-on-surface-variant">
+                          Question Prompt / Keywords
+                        </label>
+                        <input
+                          className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
+                          placeholder="e.g. Expected salary or Willing to relocate"
+                          type="text"
+                          value={newQuestion}
+                          onChange={(e) => setNewQuestion(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-medium text-on-surface-variant">Type</label>
+                          <select
+                            className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
+                            value={newCategory}
+                            onChange={(e) => setNewCategory(e.target.value as any)}
+                          >
+                            <option value="exact">Exact Answer</option>
+                            <option value="eeo">EEO Compliance</option>
+                            <option value="behavioral">Behavioral Prompt</option>
+                          </select>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-medium text-on-surface-variant">Tag (Optional)</label>
+                          <input
+                            className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
+                            placeholder="e.g. Salary, Relocation"
+                            type="text"
+                            value={newTag}
+                            onChange={(e) => setNewTag(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-medium text-on-surface-variant">Target Autofill Answer</label>
+                        <textarea
+                          className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
+                          placeholder="Enter the answer to fill..."
+                          rows={3}
+                          value={newAnswer}
+                          onChange={(e) => setNewAnswer(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="p-4 border-t border-outline-variant bg-surface-container-low flex justify-end gap-2">
+                      <button
+                        onClick={() => setIsQaModalOpen(false)}
+                        className="px-4 py-2 border border-outline-variant rounded-lg text-sm text-on-surface hover:bg-surface-container"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleAddQARule}
+                        className="px-4 py-2 bg-primary text-on-primary hover:bg-primary-container rounded-lg text-sm font-semibold"
+                      >
+                        Save Question
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-          </div>
-        )}
-      </main>
+          )}
 
-      {/* Toast Notification */}
+          {/* ======================================================== */}
+          {/* TAB 3: SITE MAPPINGS */}
+          {/* ======================================================== */}
+          {activeTab === 'mappings' && (
+            <div className="flex flex-col gap-6">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant">
+                <div>
+                  <h1 className="text-2xl font-bold text-on-surface">Learned Site Mappings</h1>
+                  <p className="text-sm text-on-surface-variant mt-0.5">
+                    Field signatures remembered automatically from your manual corrections on job portals.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowBuiltIns(!showBuiltIns)}
+                    className="px-3.5 py-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors"
+                    type="button"
+                  >
+                    {showBuiltIns ? 'Hide Built-ins' : 'View Built-in Support'}
+                  </button>
+                  <button
+                    onClick={handleClearAllCache}
+                    className="px-3.5 py-2 rounded-lg bg-error/10 hover:bg-error/20 text-error text-xs font-medium transition-colors"
+                    type="button"
+                  >
+                    Clear All Mappings
+                  </button>
+                </div>
+              </div>
+
+              {/* Built-ins Banner (Optional) */}
+              {showBuiltIns && (
+                <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-3">
+                  <h3 className="text-sm font-semibold text-on-surface">Built-in ATS Support</h3>
+                  <p className="text-xs text-on-surface-variant">
+                    Applyr natively detects standard fields on Greenhouse, Workday, Lever, and Ashby out of the box.
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                    <div className="p-2.5 rounded bg-surface-container-low text-center">
+                      <div className="font-semibold text-xs text-on-surface">Greenhouse</div>
+                      <div className="text-[11px] text-on-surface-variant">Core ATS</div>
+                    </div>
+                    <div className="p-2.5 rounded bg-surface-container-low text-center">
+                      <div className="font-semibold text-xs text-on-surface">Workday</div>
+                      <div className="text-[11px] text-on-surface-variant">Enterprise Portal</div>
+                    </div>
+                    <div className="p-2.5 rounded bg-surface-container-low text-center">
+                      <div className="font-semibold text-xs text-on-surface">Lever</div>
+                      <div className="text-[11px] text-on-surface-variant">Candidate App</div>
+                    </div>
+                    <div className="p-2.5 rounded bg-surface-container-low text-center">
+                      <div className="font-semibold text-xs text-on-surface">Ashby</div>
+                      <div className="text-[11px] text-on-surface-variant">Modern ATS</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Search Bar */}
+              {cachedHostnames.length > 0 && (
+                <div className="flex items-center gap-2 p-3 bg-surface-container-lowest rounded-lg border border-outline-variant">
+                  <span className="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+                  <input
+                    className="w-full bg-transparent border-none outline-none text-sm text-on-surface placeholder:text-outline"
+                    placeholder="Filter saved hostnames..."
+                    type="text"
+                    value={mappingSearchQuery}
+                    onChange={(e) => setMappingSearchQuery(e.target.value)}
+                  />
+                </div>
+              )}
+
+              {/* List of Site Mappings or Clean Empty State */}
+              {cachedHostnames.length === 0 ? (
+                <div className="bg-surface-container-lowest rounded-xl p-10 border border-outline-variant text-center flex flex-col items-center justify-center gap-2 shadow-sm">
+                  <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant mb-1">
+                    <span className="material-symbols-outlined text-[24px]">tab_unselected</span>
+                  </div>
+                  <h3 className="text-base font-semibold text-on-surface">No site mappings recorded yet</h3>
+                  <p className="text-sm text-on-surface-variant max-w-md">
+                    When you autofill job applications and correct any unmapped field, Applyr will remember your
+                    selection for that specific website.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {cachedHostnames.map((host) => (
+                    <div
+                      key={host}
+                      className="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant shadow-sm flex flex-col gap-3"
+                    >
+                      <div className="flex items-center justify-between border-b border-outline-variant pb-2">
+                        <span className="font-semibold text-sm text-on-surface">{host}</span>
+                        <button
+                          onClick={async () => {
+                            const next = { ...cache };
+                            delete next[host];
+                            setCache(next);
+                            await saveStoredCache(next);
+                            showToast(`Deleted mappings for ${host}`);
+                          }}
+                          className="text-xs text-error hover:underline"
+                        >
+                          Remove
+                        </button>
+                      </div>
+
+                      <div className="divide-y divide-outline-variant/40 text-xs">
+                        {Object.entries(cache[host]).map(([sig, item]) => (
+                          <div key={sig} className="py-2 flex justify-between items-center">
+                            <span className="font-mono text-on-surface-variant truncate max-w-xs">{sig}</span>
+                            <span className="font-semibold text-primary">{item.canonicalField}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* TAB 4: SETTINGS */}
+          {/* ======================================================== */}
+          {activeTab === 'settings' && (
+            <div className="flex flex-col gap-6 max-w-2xl">
+              {/* Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-outline-variant">
+                <div>
+                  <h1 className="text-2xl font-bold text-on-surface">Extension Settings</h1>
+                  <p className="text-sm text-on-surface-variant mt-0.5">
+                    Confidence thresholds, privacy controls, and local storage.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleRevertSettings}
+                    className="px-3.5 py-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors"
+                    type="button"
+                  >
+                    Revert
+                  </button>
+                  <button
+                    onClick={handleSaveSettings}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold shadow-sm transition-colors"
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">save</span>
+                    <span>Save Settings</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Setting 1: Confidence Threshold */}
+              <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4">
+                <div>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-base font-semibold text-on-surface">Classification Threshold</h3>
+                    <span className="text-lg font-bold text-primary">
+                      {Math.round(settings.confidenceThreshold * 100)}%
+                    </span>
+                  </div>
+                  <p className="text-xs text-on-surface-variant mt-1">
+                    Fields with matching confidence below this threshold will remain empty for manual review.
+                  </p>
+                </div>
+
+                <div className="py-2">
+                  <input
+                    className="w-full h-2 bg-surface-container-high rounded-full appearance-none cursor-pointer accent-primary focus:outline-none"
+                    max="100"
+                    min="40"
+                    step="5"
+                    type="range"
+                    value={Math.round(settings.confidenceThreshold * 100)}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        confidenceThreshold: Number(e.target.value) / 100,
+                      })
+                    }
+                  />
+                  <div className="flex justify-between text-[11px] text-on-surface-variant mt-1">
+                    <span>40% (More Aggressive)</span>
+                    <span>60% (Default)</span>
+                    <span>100% (Strict Only)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Setting 2: Optional AI Fallback */}
+              <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-on-surface">AI Fallback for Unmapped Fields</h3>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      Optionally use AI to analyze unknown field labels. Off by default.
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer select-none">
+                    <input
+                      className="sr-only peer"
+                      type="checkbox"
+                      checked={settings.aiFallbackEnabled}
+                      onChange={(e) => setSettings({ ...settings, aiFallbackEnabled: e.target.checked })}
+                    />
+                    <div className="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+
+                <div className="p-3 rounded-lg bg-surface-container-low border border-outline-variant text-xs text-on-surface-variant leading-relaxed">
+                  <strong className="text-on-surface">Privacy Notice:</strong> When enabled, only field labels and
+                  HTML tag types are sent to classify the field. Your personal details (name, email, address, resume)
+                  are <strong>never</strong> transmitted.
+                </div>
+
+                {settings.aiFallbackEnabled && (
+                  <div className="flex flex-col gap-3 pt-2">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">Provider</label>
+                      <select
+                        className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
+                        value={settings.aiProvider || 'gemini'}
+                        onChange={(e) => setSettings({ ...settings, aiProvider: e.target.value as any })}
+                      >
+                        <option value="gemini">Google Gemini (Recommended)</option>
+                        <option value="openai">OpenAI</option>
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-on-surface-variant">API Key</label>
+                      <input
+                        type="password"
+                        placeholder="Enter API key..."
+                        className="w-full p-2.5 rounded-lg bg-surface border border-outline-variant text-sm text-on-surface focus:border-primary focus:outline-none"
+                        value={settings.aiApiKey || ''}
+                        onChange={(e) => setSettings({ ...settings, aiApiKey: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Setting 3: Storage Management */}
+              <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4 mb-8">
+                <h3 className="text-base font-semibold text-on-surface">Data &amp; Backup</h3>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={handleExportJson}
+                    className="px-4 py-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-xs font-medium text-on-surface transition-colors"
+                    type="button"
+                  >
+                    Export All Profiles Backup
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      if (confirm('Are you sure you want to erase all profiles and cached data?')) {
+                        await saveProfiles([]);
+                        await saveStoredCache({});
+                        setProfiles([]);
+                        setCache({});
+                        showToast('All local data cleared');
+                      }
+                    }}
+                    className="px-4 py-2 rounded-lg bg-error/10 hover:bg-error/20 text-xs font-medium text-error transition-colors"
+                    type="button"
+                  >
+                    Wipe Local Storage
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* TOAST NOTIFICATION */}
       {toastMessage && (
-        <div className="toast-notice">
-          <CheckCircle2 size={18} color="var(--success)" />
+        <div className="fixed bottom-6 right-6 bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2 z-50 text-sm animate-in slide-in-from-bottom-3 fade-in duration-150">
+          <span className="material-symbols-outlined text-[18px] text-primary-fixed">check_circle</span>
           <span>{toastMessage}</span>
         </div>
       )}

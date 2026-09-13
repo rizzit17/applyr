@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-container": "#2d6a4f", "surface-dim": "#dbd9dc", "surface-container-highest": "#e3e2e4", "on-surface-variant": "#404943", "on-primary-fixed-variant": "#0e5138", "tertiary-fixed-dim": "#ffb68e", "on-secondary-container": "#6f2000", "on-tertiary-fixed": "#331200", "secondary-fixed": "#ffdbcf", "secondary-fixed-dim": "#ffb59c", "surface-container-lowest": "#ffffff", "on-tertiary": "#ffffff", "outline-variant": "#bfc9c1", "surface": "#faf9fb", "surface-bright": "#faf9fb", "background": "#faf9fb", "on-surface": "#1b1c1e", "on-tertiary-container": "#ffd0b8", "inverse-on-surface": "#f2f0f3", "tertiary-container": "#9d4500", "on-secondary": "#ffffff", "primary": "#0f5238", "inverse-surface": "#2f3032", "on-secondary-fixed-variant": "#822801", "error": "#ba1a1a", "error-container": "#ffdad6", "primary-fixed-dim": "#95d4b3", "on-tertiary-fixed-variant": "#763300", "secondary": "#a23e18", "inverse-primary": "#95d4b3", "primary-fixed": "#b1f0ce", "tertiary-fixed": "#ffdbca", "surface-variant": "#e3e2e4", "surface-container": "#efedf0", "on-error-container": "#93000a", "surface-container-high": "#e9e8ea", "on-primary-container": "#a8e7c5", "on-error": "#ffffff", "on-primary-fixed": "#002114", "on-secondary-fixed": "#390c00", "outline": "#707973", "on-primary": "#ffffff", "surface-container-low": "#f5f3f5", "surface-tint": "#2c694e", "secondary-container": "#fe8357", "tertiary": "#783300", "on-background": "#1b1c1e" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "gutter-sm": "0.75rem", "margin": "1.25rem", "margin-sm": "0.75rem", "space-lg": "1.25rem", "space-md": "0.75rem", "space-xl": "1.75rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem" }, "fontFamily": { "headline-lg-mobile": [ "Newsreader" ], "code-sm": [ "JetBrains Mono" ], "label-sm": [ "Manrope" ], "headline-sm": [ "Newsreader" ], "body-lg": [ "Manrope" ], "headline-lg": [ "Newsreader" ], "headline-md": [ "Newsreader" ], "body-sm": [ "Manrope" ], "label-md": [ "Manrope" ], "body-md": [ "Manrope" ] }, "fontSize": { "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "code-sm": [ "11px", { "lineHeight": "16px", "letterSpacing": "0", "fontWeight": "500" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-sm": [ "18px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-lg": [ "15px", { "lineHeight": "24px", "fontWeight": "400" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "500" } ], "headline-md": [ "22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-md": [ "13px", { "lineHeight": "20px", "fontWeight": "400" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low border-r border-outline-variant z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="p-margin border-b border-outline-variant"><div class="flex items-center gap-space-xs"><span class="font-headline-md text-headline-md font-semibold tracking-tight text-on-surface">Applyr</span><span class="h-2 w-2 rounded-full bg-primary inline-block"></span></div><div class="mt-space-xs font-code-sm text-code-sm text-on-surface-variant tracking-normal">v1.4.2 · Local-First Dossier</div></div><nav class="flex flex-col gap-space-xs px-space-sm pt-space-md" data-active-classes="bg-surface-container-highest text-on-surface font-semibold border-l-2 border-primary"><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-highest text-on-surface font-semibold border-l-2 border-primary" data-path="profiles" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">folder_shared</span><span class="font-label-md text-label-md">Profiles</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">3 active</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="site-mappings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">tab_unselected</span><span class="font-label-md text-label-md">Site Mappings</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">0 cached</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">tune</span><span class="font-label-md text-label-md">Settings</span></div><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">AI/Rules</span></a></nav></div><div class="p-space-md m-space-sm rounded border border-outline-variant bg-surface-container-lowest flex flex-col gap-space-sm"><div class="flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[16px]">database</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface">Local SQLite</span></div><span class="font-code-sm text-code-sm text-on-surface-variant font-medium">42.8 KB</span></div><div class="h-1 w-full bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width: 14%"></div></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant"><div class="flex items-center gap-space-xs text-primary"><span class="material-symbols-outlined text-[14px]">lock</span><span class="font-code-sm text-code-sm font-medium">0 Cloud Egress</span></div><kbd class="font-code-sm text-code-sm text-on-surface-variant border border-outline-variant rounded px-1">⌘K</kbd></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">description</span><span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Applyr</span><span class="text-outline-variant">/</span><span class="font-label-md text-label-md text-on-surface font-semibold">Local Dashboard</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-md py-1 rounded bg-primary-fixed border border-primary-fixed-dim"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span><span class="font-code-sm text-code-sm text-on-primary-fixed-variant font-semibold">Local SQLite Active · 0kb Cloud Egress</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Archival Context Ribbon -->
+<div class="w-full bg-surface-container-low px-margin py-space-sm flex flex-wrap items-center justify-between gap-space-sm shadow-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px] text-primary">folder_open</span>
+<span class="uppercase tracking-wider font-semibold">Dossier Repository</span>
+<span class="text-outline">/</span>
+<span class="text-on-surface font-medium">Record REF: 0x94A-BE</span>
+</div>
+<span class="hidden sm:inline-block h-3 w-px bg-outline-variant"></span>
+<div class="hidden sm:flex items-center gap-space-xs font-code-sm text-code-sm text-primary">
+<span class="h-1.5 w-1.5 rounded-full bg-primary animate-ping"></span>
+<span>Local Database Isolated</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Autofill Reliability Index:</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest text-primary font-code-sm text-code-sm font-semibold">98.4% Match Rate</span>
+</div>
+</div>
+<!-- Main Two-Column Editorial Workspace -->
+<div class="w-full px-margin py-space-lg flex flex-col lg:flex-row gap-space-lg items-start">
+<!-- Left Sub-rail: Profile Register -->
+<div class="w-full lg:w-80 shrink-0 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Register</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Your Profiles</h2>
+</div>
+<button class="flex items-center gap-space-xs px-space-sm py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">add</span>
+<span>New</span>
+</button>
+</div>
+<!-- Profile Item: Backend (Active) -->
+<div class="group relative rounded-lg p-space-md bg-surface-container-low transition-all cursor-pointer shadow-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="material-symbols-outlined text-[18px] text-primary">tune</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Backend</span>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-code-sm text-code-sm font-medium tracking-tight">Default</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">4y exp · Distributed systems</p>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-code-sm text-code-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-primary inline-block"></span>
+              19 fields mapped
+            </span>
+<span class="text-primary font-medium">Active</span>
+</div>
+</div>
+<!-- Profile Item: Machine Learning -->
+<div class="group rounded-lg p-space-md bg-surface-container-lowest hover:bg-surface-container-low transition-all cursor-pointer shadow-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover:text-on-surface">folder</span>
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Machine Learning</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">v1.8</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">4y exp · PyTorch, LLMs</p>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-code-sm text-code-sm text-on-surface-variant">
+<span>15 fields mapped</span>
+<span class="text-on-surface-variant">Standby</span>
+</div>
+</div>
+<!-- Profile Item: AIML Entry -->
+<div class="group rounded-lg p-space-md bg-surface-container-lowest hover:bg-surface-container-low transition-all cursor-pointer shadow-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover:text-on-surface">folder</span>
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">AIML</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">v1.2</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">1y exp · Entry / Junior</p>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-code-sm text-code-sm text-on-surface-variant">
+<span>11 fields mapped</span>
+<span class="text-on-surface-variant">Archived</span>
+</div>
+</div>
+<!-- Schema Sync Meta Box -->
+<div class="mt-space-xs p-space-sm rounded-lg bg-surface-container-high flex flex-col gap-space-xs">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">storage</span>
+              Schema Sync
+            </span>
+<span class="font-code-sm text-code-sm font-semibold text-on-surface">3 Profiles</span>
+</div>
+<div class="flex items-center justify-between font-code-sm text-code-sm text-on-surface-variant">
+<span>Engine: SQLite Embedded</span>
+<span class="text-primary font-medium">OK</span>
+</div>
+</div>
+</div>
+<!-- Quick Document Audit Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-xs text-secondary">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Ledger Authenticity</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          This dossier profile is strictly anchored within local browser storage. Changes propagate automatically to DOM autofill hooks on supported ATS platforms.
+        </p>
+<div class="pt-space-xs flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary">check_circle</span>
+<span>ATS Mappings: Lever, Greenhouse, Workday</span>
+</div>
+</div>
+</div>
+<!-- Main Workspace -->
+<div class="flex-1 min-w-0 flex flex-col gap-space-lg w-full">
+<!-- Top Title & Action Deck -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors uppercase tracking-wider" href="#">PROFILES</a>
+<span>/</span>
+<span class="text-on-surface font-semibold uppercase tracking-wider">Backend</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant text-[10px]">ID: PRF-0428</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Edit Profile: Backend</h1>
+</div>
+<!-- Action Toolbar -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors shadow-sm" title="Duplicate this profile" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Duplicate</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors shadow-sm" title="Export as structured JSON" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export JSON</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors shadow-sm" title="Import JSON definitions" type="button">
+<span class="material-symbols-outlined text-[16px]">file_upload</span>
+<span>Import</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-error-container/40 hover:bg-error-container text-error font-label-md text-label-md transition-colors shadow-sm" title="Delete profile" type="button">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+<span>Delete</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md transition-colors shadow-md" id="save-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">save</span>
+<span class="font-semibold">Save Profile</span>
+<kbd class="font-code-sm text-[10px] bg-primary-container text-on-primary-container px-1 py-0.5 rounded ml-1">⌘S</kbd>
+</button>
+</div>
+</div>
+<!-- Schema Indicator -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-wrap items-center justify-between gap-space-sm font-code-sm text-code-sm text-on-surface-variant">
+<div class="flex items-center gap-space-md flex-wrap">
+<span class="flex items-center gap-1.5 font-semibold text-on-surface">
+<span class="h-2 w-2 rounded-full bg-primary"></span>
+              Schema v2.1
+            </span>
+<span class="text-outline">·</span>
+<span>Autofill trigger match rate <strong class="text-primary font-semibold">98.4%</strong></span>
+<span class="text-outline">·</span>
+<span id="last-saved-indicator">Last saved 2m ago</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>Client-side Cryptographic Hash: 8f9b...a10</span>
+</div>
+</div>
+</div>
+<!-- SECTION 01: Profile Identity & Resume Attachment -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-code-sm text-code-sm font-semibold px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">01</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Profile Identity &amp; Resume Attachment</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Core Dispatch</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Profile Name Input -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="profile-name">
+                Profile Title / Descriptor
+              </label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">profile.label</span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="profile-name" type="text" value="Backend"/>
+<span class="absolute right-3 top-2.5 material-symbols-outlined text-[18px] text-primary">bookmark</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Appears in browser action drawer during job applications.</p>
+</div>
+<!-- Regex Rule -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="regex-rule">
+                Target Auto-detect Pattern (RegEx)
+              </label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">pattern.rule</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-code-sm text-code-sm text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="regex-rule" type="text" value="/(cv|resume).*backend.*\.pdf$/i"/>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Evaluated during auto-fill file selector prompts.</p>
+</div>
+</div>
+<!-- Resume Attachment Box -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[28px]">picture_as_pdf</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-body-md text-body-md font-semibold text-on-surface truncate">jane_doe_backend_resume.pdf</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.2 rounded bg-surface-container-highest">142 KB</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Compiled via XeLaTeX · SHA-256 Verified · Parsed &amp; Ready</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs w-full md:w-auto justify-end">
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-highest text-on-surface font-label-md text-label-md shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Download</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 rounded bg-surface-container-lowest hover:bg-surface-container-highest text-on-surface font-label-md text-label-md shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span>
+<span>Replace File</span>
+</button>
+</div>
+</div>
+</div>
+<!-- SECTION 02: Personal & Contact Information -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-code-sm text-code-sm font-semibold px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">02</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Personal &amp; Contact Information</h2>
+</div>
+<span class="font-label-sm text-label-sm text-primary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+            6 Mapped Fields
+          </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- First Name -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="first-name">First Name</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">candidate.first_name</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="first-name" type="text" value="Jane"/>
+</div>
+<!-- Last Name -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="last-name">Last Name</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">candidate.last_name</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="last-name" type="text" value="Doe"/>
+</div>
+<!-- Primary Email -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="email">Primary Email</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">candidate.email</span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="email" type="email" value="jane.doe@example.com"/>
+<span class="absolute right-3 top-2.5 font-code-sm text-code-sm text-primary font-medium">Valid</span>
+</div>
+</div>
+<!-- Phone Number -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="phone">Phone Number</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">candidate.phone</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="phone" type="tel" value="+1-555-123-4567"/>
+</div>
+<!-- Location -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="location">Current Location</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">candidate.location_city</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="location" type="text" value="San Francisco, CA"/>
+</div>
+<!-- Workplace Preference -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="workplace-pref">Workplace Preference</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">workplace.arrangement</span>
+</div>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm pr-24" id="workplace-pref" type="text" value="Hybrid / Remote only"/>
+<div class="absolute right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-[10px] font-semibold">
+<span class="material-symbols-outlined text-[13px]">check</span>
+<span>Active Flag</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 03: Links & Portfolios -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-code-sm text-code-sm font-semibold px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">03</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Links &amp; Portfolios</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Web Identifiers</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- LinkedIn Row -->
+<div class="flex flex-col md:flex-row items-stretch md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-32 shrink-0 flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface font-semibold">
+<span class="material-symbols-outlined text-[18px] text-primary">link</span>
+<span>LinkedIn</span>
+</div>
+<div class="flex-1 relative min-w-0">
+<input class="w-full bg-surface-container-lowest rounded p-space-sm font-code-sm text-code-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" type="url" value="https://linkedin.com/in/janedoe"/>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-space-xs shrink-0">
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">social.linkedin</span>
+<button class="px-space-sm py-1 rounded bg-surface-container-highest hover:bg-surface-dim text-on-surface font-label-sm text-label-sm transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">network_ping</span>
+<span>Test Ping</span>
+</button>
+</div>
+</div>
+<!-- GitHub Row -->
+<div class="flex flex-col md:flex-row items-stretch md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-32 shrink-0 flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface font-semibold">
+<span class="material-symbols-outlined text-[18px] text-primary">terminal</span>
+<span>GitHub</span>
+</div>
+<div class="flex-1 relative min-w-0">
+<input class="w-full bg-surface-container-lowest rounded p-space-sm font-code-sm text-code-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" type="url" value="https://github.com/janedoe"/>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-space-xs shrink-0">
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">social.github</span>
+<button class="px-space-sm py-1 rounded bg-surface-container-highest hover:bg-surface-dim text-on-surface font-label-sm text-label-sm transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">network_ping</span>
+<span>Test Ping</span>
+</button>
+</div>
+</div>
+<!-- Portfolio Row -->
+<div class="flex flex-col md:flex-row items-stretch md:items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-32 shrink-0 flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface font-semibold">
+<span class="material-symbols-outlined text-[18px] text-primary">language</span>
+<span>Portfolio</span>
+</div>
+<div class="flex-1 relative min-w-0">
+<input class="w-full bg-surface-container-lowest rounded p-space-sm font-code-sm text-code-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" type="url" value="https://janedoe.dev"/>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-space-xs shrink-0">
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">social.website</span>
+<button class="px-space-sm py-1 rounded bg-surface-container-highest hover:bg-surface-dim text-on-surface font-label-sm text-label-sm transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">network_ping</span>
+<span>Test Ping</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 04: Experience & Target Role -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-code-sm text-code-sm font-semibold px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">04</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Experience &amp; Target Role</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Career Ledger</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Target Role -->
+<div class="md:col-span-2 flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="target-role">
+                Target Role / Official Title
+              </label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">target.job_title</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="target-role" type="text" value="Backend Engineer"/>
+</div>
+<!-- Total Years Counter -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="years-count">
+                Experience Ledger
+              </label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">years.total</span>
+</div>
+<div class="flex items-center rounded bg-surface-container-low p-1 shadow-sm">
+<button class="w-9 h-9 rounded bg-surface-container-lowest hover:bg-surface-container-highest flex items-center justify-center text-on-surface font-semibold text-lg transition-colors shadow-sm" id="exp-minus" type="button">-</button>
+<div class="flex-1 text-center font-headline-sm text-headline-sm text-on-surface font-semibold" id="years-count">4 years</div>
+<button class="w-9 h-9 rounded bg-surface-container-lowest hover:bg-surface-container-highest flex items-center justify-center text-on-surface font-semibold text-lg transition-colors shadow-sm" id="exp-plus" type="button">+</button>
+</div>
+</div>
+</div>
+<!-- Candidate Summary / Bio -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="candidate-bio">
+              Executive Bio / Statement of Work
+            </label>
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">candidate.summary</span>
+<span class="font-code-sm text-code-sm text-primary font-semibold" id="char-counter">148 / 500 chars</span>
+</div>
+</div>
+<textarea class="w-full bg-surface-container-low rounded p-space-md font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm leading-relaxed" id="candidate-bio" maxlength="500" rows="4">Backend engineer specializing in distributed systems, event-driven architectures, and API design. Proven track record scaling low-latency microservices.</textarea>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Inserted automatically into application cover letter and intro text fields.</p>
+</div>
+</div>
+<!-- SECTION 05: Education -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md mb-space-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-code-sm text-code-sm font-semibold px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">05</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Education &amp; Credentials</h2>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-1 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px] text-primary">verified</span>
+<span>Verified Credential Seal</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Degree -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="degree">Degree Awarded</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">edu.degree</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="degree" type="text" value="B.S. Computer Science"/>
+</div>
+<!-- Institution -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="institution">Academic Institution</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">edu.school</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="institution" type="text" value="State University"/>
+</div>
+<!-- Graduation Year -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="grad-year">Conferral Year</label>
+<span class="font-code-sm text-code-sm text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">edu.year</span>
+</div>
+<input class="w-full bg-surface-container-low rounded p-space-sm font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary shadow-sm" id="grad-year" type="text" value="2022"/>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container flex items-center justify-between font-code-sm text-code-sm text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">school</span>
+<span>Accredited Academic Authority · Direct Ledger Mapping Active</span>
+</div>
+<button class="text-primary hover:underline font-semibold" type="button">+ Add Credential</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Docked Editorial Ledger Status Bar -->
+<footer class="sticky bottom-0 w-full bg-surface-container-lowest/95 backdrop-blur-md px-margin py-space-sm shadow-xl z-30 flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md flex-wrap">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-primary font-semibold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Autofill ready</span>
+</div>
+<span class="hidden sm:inline-block h-3 w-px bg-outline-variant"></span>
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px] text-on-surface-variant">dns</span>
+<span>Local SQLite cache intact</span>
+</div>
+<span class="hidden sm:inline-block h-3 w-px bg-outline-variant"></span>
+<div class="font-code-sm text-code-sm text-on-surface-variant flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-primary inline-block"></span>
+<span id="footer-save-timer">Auto-saved 2s ago</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md font-code-sm text-code-sm">
+<span class="text-on-surface-variant hidden md:inline">Press <kbd class="px-1 py-0.5 rounded bg-surface-container-high text-on-surface font-semibold border border-outline-variant">⌘S</kbd> to force sync</span>
+<button class="px-space-md py-1 rounded bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition-colors shadow-sm" id="force-sync-btn" type="button">
+        Sync State
+      </button>
+</div>
+</footer>
+</div>
+<script>
+  // Simple interactive behaviors
+  (function() {
+    // Experience counter increment/decrement
+    let years = 4;
+    const yearsDisplay = document.getElementById('years-count');
+    const plusBtn = document.getElementById('exp-plus');
+    const minusBtn = document.getElementById('exp-minus');
+
+    if (plusBtn && minusBtn && yearsDisplay) {
+      plusBtn.addEventListener('click', () => {
+        years++;
+        yearsDisplay.textContent = years + ' years';
+      });
+      minusBtn.addEventListener('click', () => {
+        if (years > 0) {
+          years--;
+          yearsDisplay.textContent = years + (years === 1 ? ' year' : ' years');
+        }
+      });
+    }
+
+    // Character Counter
+    const bioArea = document.getElementById('candidate-bio');
+    const counterDisplay = document.getElementById('char-counter');
+    if (bioArea && counterDisplay) {
+      bioArea.addEventListener('input', () => {
+        const count = bioArea.value.length;
+        counterDisplay.textContent = `${count} / 500 chars`;
+      });
+    }
+
+    // Interactive feedback for Save / Sync
+    function triggerSaveToast() {
+      const timer = document.getElementById('footer-save-timer');
+      const indicator = document.getElementById('last-saved-indicator');
+      if (timer) timer.textContent = 'Auto-saved just now';
+      if (indicator) indicator.textContent = 'Last saved just now';
+      
+      const saveBtn = document.getElementById('save-btn');
+      if (saveBtn) {
+        const origHtml = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span><span>Saved!</span>';
+        setTimeout(() => {
+          saveBtn.innerHTML = origHtml;
+        }, 1200);
+      }
+    }
+
+    const saveBtn = document.getElementById('save-btn');
+    const syncBtn = document.getElementById('force-sync-btn');
+    if (saveBtn) saveBtn.addEventListener('click', triggerSaveToast);
+    if (syncBtn) syncBtn.addEventListener('click', triggerSaveToast);
+
+    // Keyboard shortcut Cmd/Ctrl + S
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        triggerSaveToast();
+      }
+    });
+  })();
+</script></main></div></body></html>
