@@ -12,19 +12,11 @@ export function injectHighlightStyles(): void {
   const style = document.createElement('style');
   style.id = HIGHLIGHT_STYLE_ID;
   style.textContent = `
-    .autofill-highlight-high {
-      outline: 2px solid #10B981 !important;
-      outline-offset: 1px !important;
-      transition: outline 0.3s ease !important;
-    }
-    .autofill-highlight-medium {
-      outline: 2px solid #F59E0B !important;
-      outline-offset: 1px !important;
-      transition: outline 0.3s ease !important;
-    }
+    .autofill-highlight-high,
+    .autofill-highlight-medium,
     .autofill-highlight-manual {
-      outline: 2px dashed #6366F1 !important;
-      outline-offset: 2px !important;
+      outline: none !important;
+      box-shadow: none !important;
     }
     .autofill-resume-badge {
       display: inline-flex;
@@ -60,19 +52,11 @@ export function clearHighlights(): void {
 
 export function highlightField(
   el: HTMLElement,
-  type: 'high' | 'medium' | 'manual',
+  _type: 'high' | 'medium' | 'manual',
   titleTooltip?: string
 ): void {
   injectHighlightStyles();
   el.classList.remove('autofill-highlight-high', 'autofill-highlight-medium', 'autofill-highlight-manual');
-
-  if (type === 'high') {
-    el.classList.add('autofill-highlight-high');
-  } else if (type === 'medium') {
-    el.classList.add('autofill-highlight-medium');
-  } else if (type === 'manual') {
-    el.classList.add('autofill-highlight-manual');
-  }
 
   if (titleTooltip) {
     el.setAttribute('title', titleTooltip);
