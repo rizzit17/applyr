@@ -1,0 +1,32 @@
+{
+  "name": "applyr",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal-use local-first Chrome extension for job application autofill",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "watch": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "generate-icons": "node scripts/generate-icons.js"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.2.0",
+    "@types/chrome": "^0.0.313",
+    "@types/node": "^26.5.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.7"
+  }
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Greenhouse Job Application Mock</title>
+</head>
+<body>
+  <form id="application_form">
+    <div class="field">
+      <label for="first_name">First Name <span class="asterisk">*</span></label>
+      <input type="text" id="first_name" name="job_application[first_name]" autocomplete="given-name" required />
+    </div>
+
+    <div class="field">
+      <label for="last_name">Last Name <span class="asterisk">*</span></label>
+      <input type="text" id="last_name" name="job_application[last_name]" autocomplete="family-name" required />
+    </div>
+
+    <div class="field">
+      <label for="email">Email <span class="asterisk">*</span></label>
+      <input type="email" id="email" name="job_application[email]" autocomplete="email" required />
+    </div>
+
+    <div class="field">
+      <label for="phone">Phone <span class="asterisk">*</span></label>
+      <input type="tel" id="phone" name="job_application[phone]" autocomplete="tel" required />
+    </div>
+
+    <div class="field">
+      <label for="resume">Resume/CV <span class="asterisk">*</span></label>
+      <input type="file" id="resume" name="job_application[resume]" />
+    </div>
+
+    <div class="field">
+      <label for="job_application_answers_attributes_0_text_value">LinkedIn Profile</label>
+      <input type="text" id="job_application_answers_attributes_0_text_value" name="job_application[answers_attributes][0][text_value]" />
+    </div>
+
+    <div class="field">
+      <label for="job_application_answers_attributes_1_text_value">Website / Portfolio</label>
+      <input type="text" id="job_application_answers_attributes_1_text_value" name="job_application[answers_attributes][1][text_value]" />
+    </div>
+
+    <div class="field">
+      <label for="job_application_answers_attributes_2_text_value">GitHub Profile URL</label>
+      <input type="text" id="job_application_answers_attributes_2_text_value" name="job_application[answers_attributes][2][text_value]" />
+    </div>
+
+    <div class="field">
+      <label for="job_application_answers_attributes_3_text_value">Are you legally authorized to work in the US?</label>
+      <select id="job_application_answers_attributes_3_text_value" name="job_application[answers_attributes][3][text_value]">
+        <option value="">-- Please Select --</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+  </form>
+</body>
+</html>
