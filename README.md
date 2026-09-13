@@ -1,4 +1,4 @@
-# Applyr 🚀
+# Applyr
 
 > **The Local-First, Privacy-Focused Intelligent Form Autofill Assistant for Job Seekers.**  
 > Effortlessly autofill job applications across LinkedIn Easy Apply, Greenhouse, Lever, Workday, and university Google Forms with zero cloud tracking.
@@ -11,30 +11,30 @@
 
 ---
 
-## 📖 Table of Contents
-1. [Overview & Highlights](#-overview--highlights)
-2. [Why Applyr?](#-why-applyr)
-3. [Key Features](#-key-features)
-4. [Architecture & How It Works](#-architecture--how-it-works)
-5. [Tech Stack](#-tech-stack)
-6. [Project Structure](#-project-structure)
-7. [Installation & Local Setup](#-installation--local-setup)
-8. [Automated Testing](#-automated-testing)
-9. [Publishing to the Chrome Web Store](#-publishing-to-the-chrome-web-store)
-10. [Privacy & Security](#-privacy--security)
-11. [License](#-license)
+## Table of Contents
+1. [Overview & Highlights](#overview--highlights)
+2. [Why Applyr?](#why-applyr)
+3. [Key Features](#key-features)
+4. [Architecture & How It Works](#architecture--how-it-works)
+5. [Tech Stack](#tech-stack)
+6. [Project Structure](#project-structure)
+7. [Installation & Local Setup](#installation--local-setup)
+8. [Automated Testing](#automated-testing)
+9. [Publishing to the Chrome Web Store](#publishing-to-the-chrome-web-store)
+10. [Privacy & Security](#privacy--security)
+11. [License](#license)
 
 ---
 
-## 🌟 Overview & Highlights
+## Overview & Highlights
 
 Applying for internships and full-time roles is repetitive and tedious. Job seekers spend countless hours re-typing the same contact details, CGPA scores, graduation years, links, and essays across disparate Applicant Tracking Systems (ATS) and college placement portals.
 
-**Applyr** is a high-speed, local-first Chrome extension (Manifest V3) engineered to automate this workflow. It intelligently detects, classifies, and fills complex form fields—including custom React Select dropdowns, Workday components, and tricky Google Forms radio groups—while keeping **100% of your personal data on your local device**.
+**Applyr** is a high-speed, local-first Chrome extension (Manifest V3) engineered to automate this workflow. It intelligently detects, classifies, and fills complex form fields, including custom React Select dropdowns, Workday components, and tricky Google Forms radio groups, while keeping **100% of your personal data on your local device**.
 
 ---
 
-## 💡 Why Applyr?
+## Why Applyr?
 
 | Feature | Standard Browser Autofill | Generic Web Scrapers | Applyr |
 |---|---|---|---|
@@ -47,30 +47,30 @@ Applying for internships and full-time roles is repetitive and tedious. Job seek
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 1. 🎯 Multi-Profile Management
+### 1. Multi-Profile Management
 - Switch effortlessly between tailored personas (e.g., **Software Engineering**, **AI / Machine Learning**, **Product Management**).
 - Each profile stores distinct resumes, projects, summaries, GitHub, LinkedIn, and portfolio URLs.
 
-### 2. 🧠 4-Tier Intelligent Matching Engine
+### 2. 4-Tier Intelligent Matching Engine
 Applyr classifies fields using a short-circuiting cascade:
-1. **Tier 1 — HTML Autocomplete**: Detects standard browser autocomplete tokens (`given-name`, `email`, `tel`, etc.).
-2. **Tier 2 — Learned Per-Site Cache**: Remembers previous user corrections for specific domains using SHA-256 field signatures.
-3. **Tier 3 — Weighted Keyword & Custom Q&A Dictionary**: Advanced fuzzy matching for academic scores, degrees (`B.Tech`), graduation years (`2027`), citizenship, arrears, and campus questions.
-4. **Tier 4 — Optional AI Fallback**: Optional client-side API call (e.g., Gemini) for unstructured essay prompts (feature-flagged, disabled by default).
+1. **Tier 1 - HTML Autocomplete**: Detects standard browser autocomplete tokens (`given-name`, `email`, `tel`, etc.).
+2. **Tier 2 - Learned Per-Site Cache**: Remembers previous user corrections for specific domains using SHA-256 field signatures.
+3. **Tier 3 - Weighted Keyword & Custom Q&A Dictionary**: Advanced fuzzy matching for academic scores, degrees (`B.Tech`), graduation years (`2027`), citizenship, arrears, and campus questions.
+4. **Tier 4 - Optional AI Fallback**: Optional client-side API call (e.g., Gemini) for unstructured essay prompts (feature-flagged, disabled by default).
 
-### 3. 🛡️ Framework-Safe DOM Autofill
+### 3. Framework-Safe DOM Autofill
 - **Bypasses React / Vue / Angular Synthetic Wrappers**: Uses `Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set` followed by bubbling `input`, `change`, and `blur` events so reactive state forms never wipe the filled data upon submission.
 - **Deep Google Forms Support**: Traverses Google Forms Material Wiz components, handles initial `aria-disabled` attributes, triggers multi-target pointer/mouse event sequences, and selects predefined radio buttons without erroneously writing into auxiliary text fields.
 - **Custom ATS Adapters**: Built-in compatibility modules for Workday custom inputs and React Select comboboxes.
 
-### 4. 🔄 Active Learning from Corrections
+### 4. Active Learning from Corrections
 - When you manually modify an autofilled field on an unfamiliar career site, Applyr detects the change, computes a stable field signature, and stores the mapping locally. The next time you visit that ATS, it fills it with 100% accuracy.
 
 ---
 
-## 🏗️ Architecture & How It Works
+## Architecture & How It Works
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -97,7 +97,7 @@ Applyr classifies fields using a short-circuiting cascade:
 
 ---
 
-## 💻 Tech Stack
+## Tech Stack
 
 - **Core Language**: TypeScript 5.7
 - **UI Framework**: React 19 + ReactDOM 19
@@ -109,7 +109,7 @@ Applyr classifies fields using a short-circuiting cascade:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 applyr/
@@ -141,7 +141,7 @@ applyr/
 
 ---
 
-## 🛠️ Installation & Local Setup
+## Installation & Local Setup
 
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
@@ -174,7 +174,7 @@ This outputs the compiled extension bundle into the `dist/` directory.
 
 ---
 
-## 🧪 Automated Testing
+## Automated Testing
 
 Applyr includes automated test suites covering form scanning, two-pass radio matching, framework bypasses, and real-world Google Form HTML:
 
@@ -188,7 +188,7 @@ npm run test:watch
 
 ---
 
-## 🚀 Publishing to the Chrome Web Store
+## Publishing to the Chrome Web Store
 
 Want to publish Applyr to the Chrome Web Store so friends or other developers can install it with one click? Follow this step-by-step guide.
 
@@ -230,12 +230,12 @@ Copy and paste the pre-written metadata from [`CHROMEWEBSTORE.md`](./CHROMEWEBST
 
 ### Step 5: Upload Store Graphic Assets
 Google requires the following image assets:
-- **Store Icon**: 128×128 PNG (located at `public/icons/icon-128.png`).
-- **Screenshots**: At least 1 screenshot (1280×800 or 640×400 PNG/JPEG) demonstrating:
+- **Store Icon**: 128x128 PNG (located at `public/icons/icon-128.png`).
+- **Screenshots**: At least 1 screenshot (1280x800 or 640x400 PNG/JPEG) demonstrating:
   - The Applyr extension popup.
   - The profiles / custom Q&A options dashboard.
   - A form autofilled with Applyr.
-- **Small Promo Tile** (optional but recommended): 440×280 PNG.
+- **Small Promo Tile** (optional but recommended): 440x280 PNG.
 
 ### Step 6: Privacy & Permissions Justification
 Google's review team strictly audits permissions. Paste these exact justifications into the **Privacy practices** tab:
@@ -257,7 +257,7 @@ Google's review team strictly audits permissions. Paste these exact justificatio
 
 ---
 
-## 🔒 Privacy & Security
+## Privacy & Security
 
 Applyr was built from day one under strict local-first privacy principles:
 - **Zero Remote Storage**: All personal details (names, contact info, resumes, marks) reside solely in your browser's `chrome.storage.local`.
@@ -267,6 +267,6 @@ Applyr was built from day one under strict local-first privacy principles:
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE). Feel free to fork, customize, and use it to accelerate your career search!
