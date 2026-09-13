@@ -92,38 +92,106 @@ function fillSelectElement(select: HTMLSelectElement, targetValue: string): bool
 }
 
 /**
+ * Normalizes text for comparison by removing punctuation and extra whitespace.
+ */
+function cleanText(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+/**
+ * Clicks a radio element safely, dispatching focus, mouse events, native click,
+ * and clicking any inner toggle element for frameworks like Google Forms Wiz.
+ */
+function clickRadioElement(opt: HTMLElement): void {
+  try {
+    opt.focus();
+  } catch {
+    // Ignore focus failure
+  }
+
+  // 1. Mouse events on the radio container
+  const mouseEvents = ['mousedown', 'mouseup', 'click'];
+  for (const ev of mouseEvents) {
+    opt.dispatchEvent(new MouseEvent(ev, { bubbles: true, cancelable: true }));
+  }
+  opt.click();
+
+  // 2. In ARIA radio, update aria-checked attribute
+  if (opt.getAttribute('role') === 'radio') {
+    opt.setAttribute('aria-checked', 'true');
+  }
+
+  // 3. Click any inner clickable toggle / label elements (Google Forms Wiz components)
+  const innerClickable = opt.querySelector<HTMLElement>(
+    '.quantumWizTogglePaperradioEl, .docssharedWHey6d, .aDTYNe, span, label'
+  );
+  if (innerClickable && innerClickable !== opt) {
+    for (const ev of mouseEvents) {
+      innerClickable.dispatchEvent(new MouseEvent(ev, { bubbles: true, cancelable: true }));
+    }
+    innerClickable.click();
+  }
+
+  // 4. Dispatch change event to notify any listeners
+  opt.dispatchEvent(new Event('change', { bubbles: true }));
+  const group = opt.closest('[role="radiogroup"]');
+  if (group) {
+    group.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+}
+
+/**
  * Handles radio / checkbox elements by matching label text and dispatching click.
+ * Implements two-pass matching: prioritizes predefined radio buttons over auxiliary "Other" text inputs.
  */
 function fillRadioOrCheckbox(el: HTMLElement, targetValue: string): boolean {
   try {
     const input = el as HTMLInputElement;
-    const isCheckbox = input.type === 'checkbox';
-    const isRadio = input.type === 'radio';
+    const isCheckbox = input.type === 'checkbox' || el.getAttribute('role') === 'checkbox';
+    const isNativeRadio = input.type === 'radio';
 
     const normTarget = targetValue.toLowerCase().trim();
+    const cleanTarget = cleanText(targetValue);
     const isAffirmative = ['yes', 'true', '1', 'authorized', 'agree'].includes(normTarget);
     const isNegative = ['no', 'false', '0', 'decline', 'disagree'].includes(normTarget);
 
-    // If it's a single checkbox (e.g. "I agree to terms" or "Authorized to work")
+    // 1. Checkbox handling (native or ARIA)
     if (isCheckbox) {
       const shouldCheck = isAffirmative || normTarget === 'check';
-      if (input.checked !== shouldCheck) {
-        input.click();
+      if (el instanceof HTMLInputElement) {
+        if (el.checked !== shouldCheck) {
+          el.click();
+        }
+      } else {
+        const isChecked = el.getAttribute('aria-checked') === 'true';
+        if (isChecked !== shouldCheck) {
+          clickRadioElement(el);
+        }
       }
       return true;
     }
 
-    // If radio button: check if this radio's value or associated label matches
-    if (isRadio) {
+    // 2. Single native radio input
+    if (isNativeRadio) {
       const val = (input.value || '').toLowerCase().trim();
       const parentLabel = input.closest('label');
       const labelText = (parentLabel?.textContent || '').toLowerCase().trim();
+      const cleanVal = cleanText(val);
+      const cleanLabel = cleanText(labelText);
+
+      const isOther = val.includes('other') || labelText.startsWith('other');
+      if (isOther && normTarget !== 'other') {
+        return false;
+      }
 
       const matches =
         val === normTarget ||
+        cleanVal === cleanTarget ||
         labelText.includes(normTarget) ||
-        (isAffirmative && (val === 'yes' || labelText.includes('yes'))) ||
-        (isNegative && (val === 'no' || labelText.includes('no')));
+        cleanLabel.includes(cleanTarget) ||
+        cleanTarget.includes(cleanLabel) ||
+        (isAffirmative && (val === 'yes' || cleanLabel === 'yes' || cleanLabel.includes('yes'))) ||
+        (isNegative && (val === 'no' || cleanLabel === 'no' || cleanLabel.includes('no')));
 
       if (matches) {
         if (!input.checked) {
@@ -131,37 +199,161 @@ function fillRadioOrCheckbox(el: HTMLElement, targetValue: string): boolean {
         }
         return true;
       }
+      return false;
     }
 
-    // ARIA radiogroup or Google Forms question block containing radio options
-    if (el.getAttribute('role') === 'radiogroup' || el.classList.contains('Qr7Oae')) {
-      const radioOptions = el.querySelectorAll<HTMLElement>('[role="radio"]');
-      for (const opt of radioOptions) {
-        const optText = (opt.getAttribute('data-value') || opt.getAttribute('aria-label') || opt.textContent || '').toLowerCase().trim();
-        const matches =
-          optText === normTarget ||
-          optText.includes(normTarget) ||
-          normTarget.includes(optText) ||
-          (isAffirmative && (optText === 'yes' || optText.includes('yes'))) ||
-          (isNegative && (optText === 'no' || optText.includes('no')));
-        if (matches) {
-          opt.click();
+    // 3. Radio group or container (ARIA radiogroup, Google Forms Qr7Oae, or form-group)
+    const isRadioGroup =
+      el.getAttribute('role') === 'radiogroup' ||
+      el.classList.contains('Qr7Oae') ||
+      el.querySelector('[role="radio"], input[type="radio"]') !== null;
+
+    if (isRadioGroup) {
+      const ariaRadios = Array.from(el.querySelectorAll<HTMLElement>('[role="radio"]'));
+      const nativeRadios = Array.from(el.querySelectorAll<HTMLInputElement>('input[type="radio"]'));
+
+      // Case A: ARIA radio options (Google Forms, custom ATS)
+      if (ariaRadios.length > 0) {
+        const parseOption = (opt: HTMLElement) => {
+          const dataVal = (opt.getAttribute('data-value') || '').trim();
+          const ariaLabel = (opt.getAttribute('aria-label') || '').trim();
+
+          const clone = opt.cloneNode(true) as HTMLElement;
+          clone.querySelectorAll('input, textarea').forEach((c) => c.remove());
+          const text = (clone.textContent || '').trim();
+
+          const isOther =
+            dataVal === '__other_option__' ||
+            ariaLabel.toLowerCase().startsWith('other') ||
+            text.toLowerCase().startsWith('other') ||
+            opt.querySelector('.Hvn9fb') !== null ||
+            opt.querySelector('input[type="text"]') !== null;
+
+          const raw = (dataVal || ariaLabel || text).toLowerCase().trim();
+          const clean = cleanText(raw);
+
+          return { opt, dataVal, ariaLabel, text, raw, clean, isOther };
+        };
+
+        const parsedOptions = ariaRadios.map(parseOption);
+
+        // PASS 1: Search for predefined options (non-Other) that match targetValue
+        for (const item of parsedOptions) {
+          if (item.isOther) continue;
+
+          const matches =
+            item.raw === normTarget ||
+            item.clean === cleanTarget ||
+            (cleanTarget.length >= 2 && item.clean.includes(cleanTarget)) ||
+            (item.clean.length >= 2 && cleanTarget.includes(item.clean)) ||
+            (isAffirmative && (item.raw === 'yes' || item.clean === 'yes')) ||
+            (isNegative && (item.raw === 'no' || item.clean === 'no'));
+
+          if (matches) {
+            clickRadioElement(item.opt);
+
+            // Deselect and clear any auxiliary "Other" text input and radio
+            for (const otherItem of parsedOptions.filter((o) => o.isOther)) {
+              otherItem.opt.setAttribute('aria-checked', 'false');
+            }
+            const auxInputs = el.querySelectorAll<HTMLInputElement>(
+              'input.Hvn9fb, input[aria-label*="other" i], input[type="text"]'
+            );
+            for (const auxInput of Array.from(auxInputs)) {
+              if (auxInput.value) {
+                setNativeValue(auxInput, '');
+              }
+            }
+            return true;
+          }
+        }
+
+        // PASS 2: If no predefined option matched, fallback to "Other" option if available
+        const otherOption = parsedOptions.find((o) => o.isOther);
+        if (otherOption) {
+          clickRadioElement(otherOption.opt);
+          const auxInput =
+            otherOption.opt.querySelector<HTMLInputElement>('input') ||
+            el.querySelector<HTMLInputElement>('input.Hvn9fb, input[aria-label*="other" i], input[type="text"]');
+          if (auxInput) {
+            setNativeValue(auxInput, targetValue);
+            dispatchInputEvents(auxInput, false);
+          }
           return true;
+        }
+      }
+
+      // Case B: Native radio options inside a container
+      if (nativeRadios.length > 0) {
+        // PASS 1: Predefined native radios
+        for (const r of nativeRadios) {
+          const val = (r.value || '').toLowerCase().trim();
+          const parentLabel = r.closest('label');
+          const labelText = (parentLabel?.textContent || '').toLowerCase().trim();
+          const isOther = val.includes('other') || labelText.startsWith('other');
+          if (isOther) continue;
+
+          const cleanVal = cleanText(val);
+          const cleanLabel = cleanText(labelText);
+
+          const matches =
+            val === normTarget ||
+            cleanVal === cleanTarget ||
+            labelText.includes(normTarget) ||
+            cleanLabel.includes(cleanTarget) ||
+            cleanTarget.includes(cleanLabel) ||
+            (isAffirmative && (val === 'yes' || cleanLabel === 'yes' || cleanLabel.includes('yes'))) ||
+            (isNegative && (val === 'no' || cleanLabel === 'no' || cleanLabel.includes('no')));
+
+          if (matches) {
+            if (!r.checked) r.click();
+            const otherInputs = el.querySelectorAll<HTMLInputElement>('input[type="text"]');
+            for (const oInput of Array.from(otherInputs)) {
+              if (oInput.value) setNativeValue(oInput, '');
+            }
+            return true;
+          }
+        }
+
+        // PASS 2: Native Other radio fallback
+        for (const r of nativeRadios) {
+          const val = (r.value || '').toLowerCase().trim();
+          const parentLabel = r.closest('label');
+          const labelText = (parentLabel?.textContent || '').toLowerCase().trim();
+          const isOther = val.includes('other') || labelText.startsWith('other');
+          if (isOther) {
+            if (!r.checked) r.click();
+            const auxInput =
+              parentLabel?.querySelector<HTMLInputElement>('input[type="text"]') ||
+              el.querySelector<HTMLInputElement>('input[type="text"]');
+            if (auxInput) {
+              setNativeValue(auxInput, targetValue);
+              dispatchInputEvents(auxInput, false);
+            }
+            return true;
+          }
         }
       }
     }
 
-    // Direct ARIA radio
+    // 4. Direct ARIA radio (standalone)
     if (el.getAttribute('role') === 'radio') {
-      const optText = (el.getAttribute('data-value') || el.getAttribute('aria-label') || el.textContent || '').toLowerCase().trim();
+      const dataVal = (el.getAttribute('data-value') || '').trim();
+      const ariaLabel = (el.getAttribute('aria-label') || '').trim();
+      const text = (el.textContent || '').trim();
+      const raw = (dataVal || ariaLabel || text).toLowerCase().trim();
+      const clean = cleanText(raw);
+
       const matches =
-        optText === normTarget ||
-        optText.includes(normTarget) ||
-        normTarget.includes(optText) ||
-        (isAffirmative && (optText === 'yes' || optText.includes('yes'))) ||
-        (isNegative && (optText === 'no' || optText.includes('no')));
+        raw === normTarget ||
+        clean === cleanTarget ||
+        (cleanTarget.length >= 2 && clean.includes(cleanTarget)) ||
+        (clean.length >= 2 && cleanTarget.includes(clean)) ||
+        (isAffirmative && (raw === 'yes' || clean === 'yes')) ||
+        (isNegative && (raw === 'no' || clean === 'no'));
+
       if (matches) {
-        el.click();
+        clickRadioElement(el);
         return true;
       }
     }

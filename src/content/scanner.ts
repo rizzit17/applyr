@@ -56,6 +56,53 @@ export function isVisible(el: HTMLElement): boolean {
 }
 
 /**
+ * Checks if an input is an auxiliary "Other" text field attached to a radio/checkbox option.
+ * These inputs must not be treated as standalone question fields; they are handled
+ * by the parent radiogroup/checkbox when the "Other" option is chosen.
+ */
+export function isAuxiliaryOtherInput(el: HTMLElement): boolean {
+  if (!(el instanceof HTMLInputElement)) return false;
+  if (el.type !== 'text' && el.type !== '') return false;
+
+  // 1. Google Forms specific class
+  if (el.classList.contains('Hvn9fb')) return true;
+
+  // 2. aria-label matches "Other response", "Other:", or "Other"
+  const ariaLabel = (el.getAttribute('aria-label') || '').toLowerCase().trim();
+  if (
+    ariaLabel === 'other response' ||
+    ariaLabel === 'other' ||
+    ariaLabel === 'other:' ||
+    ariaLabel.startsWith('other response') ||
+    ariaLabel.startsWith('other:')
+  ) {
+    return true;
+  }
+
+  // 3. Inside a custom ARIA radio option or checkbox option
+  if (el.closest('[role="radio"], [role="checkbox"]')) {
+    return true;
+  }
+
+  // 4. Inside a label that already contains a radio or checkbox input
+  const parentLabel = el.closest('label');
+  if (parentLabel && parentLabel.querySelector('input[type="radio"], input[type="checkbox"]')) {
+    const labelText = (parentLabel.textContent || '').toLowerCase();
+    if (labelText.includes('other')) {
+      return true;
+    }
+  }
+
+  // 5. Sibling or child within Google Forms / Material Wiz toggle option container
+  const parentOption = el.closest('.docssharedWHey6d, .appsMaterialWizToggleRadiogroupEl, [data-value="__other_option__"]');
+  if (parentOption) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Resolves label context for a given form element following the priority chain:
  * <label for> -> wrapping <label> -> aria-labelledby -> aria-label -> placeholder -> preceding text
  */
@@ -196,15 +243,23 @@ export function scanForm(root: Document | ShadowRoot = document): ScanResult {
       'select',
       '[role="combobox"]',
       '[contenteditable="true"]',
-      'div[role="radiogroup"]',
-      'div[role="radio"]',
-      'div[role="checkbox"]',
+      '[role="radiogroup"]',
+      '[role="radio"]',
+      '[role="checkbox"]',
     ].join(', ');
 
     const candidates = Array.from(root.querySelectorAll<HTMLElement>(selector));
 
     for (const el of candidates) {
       if (!isVisible(el)) continue;
+
+      // Skip auxiliary "Other" text inputs belonging to radio/checkbox groups
+      if (isAuxiliaryOtherInput(el)) continue;
+
+      // Skip child [role="radio"] if their parent [role="radiogroup"] is being scanned
+      if (el.getAttribute('role') === 'radio' && el.parentElement?.closest('[role="radiogroup"]')) {
+        continue;
+      }
 
       const elementType = determineElementType(el);
       const inputEl = el instanceof HTMLInputElement ? el : null;
@@ -222,6 +277,15 @@ export function scanForm(root: Document | ShadowRoot = document): ScanResult {
       let options: string[] | undefined;
       if (el instanceof HTMLSelectElement) {
         options = Array.from(el.options).map((opt) => opt.text.trim());
+      } else if (el.getAttribute('role') === 'radiogroup' || el.classList.contains('Qr7Oae')) {
+        const radioEls = el.querySelectorAll<HTMLElement>('[role="radio"], input[type="radio"]');
+        options = Array.from(radioEls)
+          .map((r) => {
+            const clone = r.cloneNode(true) as HTMLElement;
+            clone.querySelectorAll('input, textarea').forEach((c) => c.remove());
+            return (r.getAttribute('data-value') || r.getAttribute('aria-label') || clone.textContent || '').trim();
+          })
+          .filter((t) => t.length > 0 && !t.toLowerCase().startsWith('other') && t !== '__other_option__');
       }
 
       const fieldSignature = computeFieldSignature({
