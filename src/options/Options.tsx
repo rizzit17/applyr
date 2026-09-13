@@ -709,7 +709,10 @@ export const Options: React.FC = () => {
             <img
               src="/rishu_pfp.jpeg"
               alt="Rishit Chaudhary"
+              width="32"
+              height="32"
               className="w-8 h-8 rounded-full object-cover ring-1 ring-primary/40 shadow-sm"
+              style={{ width: '32px', height: '32px', borderRadius: '9999px', objectFit: 'cover' }}
               onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
             />
           </div>

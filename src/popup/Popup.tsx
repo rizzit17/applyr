@@ -149,7 +149,10 @@ export const Popup: React.FC = () => {
   }
 
   return (
-    <div className="w-[360px] bg-surface text-on-surface flex flex-col gap-4 p-4 antialiased select-none font-body-md">
+    <div
+      className="w-[360px] bg-surface text-on-surface flex flex-col gap-4 p-4 antialiased select-none font-body-md"
+      style={{ width: '360px', minWidth: '360px', maxWidth: '360px', boxSizing: 'border-box' }}
+    >
       {/* Clean Header */}
       <header className="flex items-center justify-between pb-3 border-b border-outline-variant">
         <div className="flex items-center gap-2">
@@ -198,7 +201,10 @@ export const Popup: React.FC = () => {
               <img
                 src="/rishu_pfp.jpeg"
                 alt="Avatar"
+                width="28"
+                height="28"
                 className="w-7 h-7 rounded-full object-cover ring-1 ring-outline-variant shrink-0"
+                style={{ width: '28px', height: '28px', borderRadius: '9999px', objectFit: 'cover' }}
                 onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
               />
               <div className="flex flex-col min-w-0">

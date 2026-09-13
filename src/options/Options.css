@@ -3,19 +3,24 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
+
+  html,
+  body {
     margin: 0;
     padding: 0;
   }
+
   body {
     overscroll-behavior: none;
     background-color: #faf9fb;
     color: #1b1c1e;
   }
-  main > :first-child {
+
+  main> :first-child {
     margin-top: 0 !important;
   }
-  main > :last-child {
+
+  main> :last-child {
     margin-bottom: 0 !important;
   }
 }
